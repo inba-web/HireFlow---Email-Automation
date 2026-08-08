@@ -6,7 +6,7 @@
 }
 
 body {
-    @apply bg-black text-white text-sm antialiased;
+    @apply bg-black text-white text-sm antialiased selection:bg-[#D10A8A] selection:text-white;
 }
 
 @layer components {
@@ -17,4 +17,24 @@ body {
     .btn {
         @apply cursor-pointer rounded-full px-8 py-2.5 font-medium text-white transition hover:opacity-90 active:scale-98;
     }
+}
+
+/* Sleek dark scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.35);
 }
