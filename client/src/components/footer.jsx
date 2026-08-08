@@ -15,9 +15,8 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
         >
-            <a href="https://prebuiltui.com?utm_source=genesis">
                 <img src='/assets/logo.svg' alt='logo' className='h-8.5 w-auto' width={205} height={48} />
-            </a>
+
 
             <div className="flex flex-wrap items-center justify-center gap-8 py-8">
                 {links.map((link, index) => (
@@ -43,7 +42,7 @@ export default function Footer() {
             <hr className="w-full border-white/20 mt-6" />
             <div className="flex flex-col md:flex-row items-center w-full justify-between gap-4 py-4">
                 <p>Build Ai agents for free</p>
-                <p>Copyright © 2025 <a href="https://prebuiltui.com?utm_source=genesis"> PrebuiltUI</a>. All rights reservered.</p>
+                <p>Copyright © 2026 HireFlow. All rights reservered.</p>
             </div>
         </motion.footer>
     );

@@ -1,0 +1,30 @@
+# Environment variables (NEVER COMMIT)
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build artifacts
+dist/
+build/
+client/dist/
+
+# Generated documents & temp files
+server/temp/
+server/generated-docs/
+server/uploads/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS & Editor files
+.DS_Store
+.idea/
+.vscode/
+*.swp

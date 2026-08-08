@@ -1,36 +1,165 @@
-import LenisScroll from "./components/lenis-scroll";
-import Navbar from "./components/navbar";
-import Footer from "./components/footer";
-import HeroSection from "./sections/hero-section";
-import FaqSection from "./sections/faq-section";
-import TrustedCompanies from "./sections/trusted-companies";
-import Features from "./sections/features";
-import WorkflowSteps from "./sections/workflow-steps";
-import Testimonials from "./sections/testimonials";
-import PricingPlans from "./sections/pricing-plans";
-import CallToAction from "./sections/call-to-action";
+import React, { useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { ClerkProvider, useAuth as useClerkAuth } from '@clerk/clerk-react';
+import { ToastProvider } from './context/ToastContext';
+import { AppLayout } from './layouts/AppLayout';
+import { LandingPage } from './pages/LandingPage';
+import { AuthPage } from './pages/AuthPage';
+import { DashboardPage } from './pages/DashboardPage';
+import { CandidatesPage } from './pages/CandidatesPage';
+import { CampaignsPage } from './pages/CampaignsPage';
+import { CampaignWizardPage } from './pages/CampaignWizardPage';
+import { CampaignDetailPage } from './pages/CampaignDetailPage';
+import { EmailTemplatesPage } from './pages/EmailTemplatesPage';
+import { DocumentTemplatesPage } from './pages/DocumentTemplatesPage';
+import { DocumentsPage } from './pages/DocumentsPage';
+import { EmailLogsPage } from './pages/EmailLogsPage';
+import { AnalyticsPage } from './pages/AnalyticsPage';
+import { AuditLogsPage } from './pages/AuditLogsPage';
+import { SettingsPage } from './pages/SettingsPage';
+import { setClerkTokenGetter } from './services/api';
+
+const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+function TokenBridge() {
+  const { getToken } = useClerkAuth();
+
+  useEffect(() => {
+    if (getToken) {
+      setClerkTokenGetter(getToken);
+    }
+  }, [getToken]);
+
+  return null;
+}
 
 export default function App() {
+  const isKeyValid = Boolean(
+    CLERK_PUBLISHABLE_KEY && !CLERK_PUBLISHABLE_KEY.includes('placeholder')
+  );
+
+  const AppRoutes = (
+    <ToastProvider>
+      <Routes>
+        {/* Public Marketing Landing */}
+        <Route path="/" element={<LandingPage />} />
+
+        {/* Public Auth Routes */}
+        <Route path="/sign-in/*" element={<AuthPage mode="sign-in" />} />
+        <Route path="/sign-up/*" element={<AuthPage mode="sign-up" />} />
+
+        {/* Protected App Shell Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <AppLayout>
+              <DashboardPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/candidates"
+          element={
+            <AppLayout>
+              <CandidatesPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/campaigns"
+          element={
+            <AppLayout>
+              <CampaignsPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/campaigns/create"
+          element={
+            <AppLayout>
+              <CampaignWizardPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/campaigns/:id"
+          element={
+            <AppLayout>
+              <CampaignDetailPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/email-templates"
+          element={
+            <AppLayout>
+              <EmailTemplatesPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/document-templates"
+          element={
+            <AppLayout>
+              <DocumentTemplatesPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/documents"
+          element={
+            <AppLayout>
+              <DocumentsPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/email-logs"
+          element={
+            <AppLayout>
+              <EmailLogsPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/analytics"
+          element={
+            <AppLayout>
+              <AnalyticsPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/audit-logs"
+          element={
+            <AppLayout>
+              <AuditLogsPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <AppLayout>
+              <SettingsPage />
+            </AppLayout>
+          }
+        />
+
+        {/* Catch-all fallback */}
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </ToastProvider>
+  );
+
+  if (isKeyValid) {
     return (
-        <>
-            <LenisScroll />
-            <Navbar />
-            <div className="fixed inset-0 overflow-hidden -z-20 pointer-events-none">
-                <div className="absolute rounded-full top-80 left-2/5 -translate-x-1/2 size-130 bg-[#D10A8A] blur-[100px]" />
-                <div className="absolute rounded-full top-80 right-0 -translate-x-1/2 size-130 bg-[#2E08CF] blur-[100px]" />
-                <div className="absolute rounded-full top-0 left-1/2 -translate-x-1/2 size-130 bg-[#F26A06] blur-[100px]" />
-            </div>
-            <main className='px-4'>
-                <HeroSection />
-                <TrustedCompanies />
-                <Features />
-                <WorkflowSteps />
-                <Testimonials />
-                <FaqSection />
-                <PricingPlans />
-                <CallToAction />
-            </main>
-            <Footer />
-        </>
+      <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY} afterSignOutUrl="/">
+        <TokenBridge />
+        {AppRoutes}
+      </ClerkProvider>
     );
+  }
+
+  return AppRoutes;
 }
