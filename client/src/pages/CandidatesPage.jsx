@@ -14,6 +14,7 @@ import {
   SquareIcon,
   FileTextIcon,
   AlertCircleIcon,
+  SparklesIcon,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { GlassCard } from '../components/ui/GlassCard';
@@ -368,17 +369,26 @@ export function CandidatesPage() {
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-white/10">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">Candidate Management</h1>
-          <p className="text-xs sm:text-sm text-gray-400 mt-1">
-            Search, filter, and batch-personalize recruitment documents for all active candidates.
-          </p>
+    <div className="space-y-8">
+      {/* Centered Hero Header - Matching Theme */}
+      <section className="flex flex-col items-center text-center space-y-4 pt-4">
+        <div className="flex items-center gap-2.5 glass px-4 py-1.5 rounded-full text-xs font-medium text-gray-200 shadow-xl border-white/20">
+          <SparklesIcon className="size-3.5 text-amber-400" />
+          <span>Enterprise Recruitment Email &amp; Document Automation</span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
+        <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
+          Candidate{' '}
+          <span className="bg-gradient-to-r from-[#D10A8A] via-[#F26A06] to-[#2E08CF] bg-clip-text text-transparent">
+            Roster &amp; Pipeline
+          </span>
+        </h1>
+
+        <p className="text-gray-300 text-sm max-w-xl">
+          Search, filter, and batch-personalize recruitment documents and emails for all active applicants.
+        </p>
+
+        <div className="flex flex-wrap items-center gap-2.5 pt-2">
           <GlassButton size="sm" variant="outline" icon={DownloadIcon} onClick={handleExportCsv}>
             Export CSV
           </GlassButton>
@@ -389,7 +399,7 @@ export function CandidatesPage() {
             Add Candidate
           </GlassButton>
         </div>
-      </div>
+      </section>
 
       {/* Filter and Search Controls */}
       <GlassCard animate={false} className="p-4 space-y-3">

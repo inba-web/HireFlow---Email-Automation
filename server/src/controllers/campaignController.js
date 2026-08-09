@@ -141,14 +141,16 @@ export async function sendCampaign(req, res, next) {
     const { id } = req.params;
     if (!isDBConnected()) {
       const camp = mockStore.campaigns.find(c => c._id === id);
-      if (camp) {
-        camp.status = 'Completed';
-        camp.stats.sent = camp.recipientCandidateIds?.length || 1;
-        camp.stats.delivered = camp.recipientCandidateIds?.length || 1;
+      if (!camp) {
+        return res.status(404).json({ success: false, message: 'Campaign not found' });
       }
+
+      camp.status = 'Processing';
+      await queueCampaignJobs(camp);
+
       return res.json({
         success: true,
-        message: `Campaign queued for async processing (${camp?.stats.totalRecipients || 1} recipients).`,
+        message: `Campaign "${camp.name}" queued for async processing (${camp.recipientCandidateIds?.length || 1} recipients).`,
         data: camp,
       });
     }

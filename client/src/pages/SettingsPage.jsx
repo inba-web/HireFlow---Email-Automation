@@ -7,6 +7,7 @@ import {
   CheckCircle2Icon,
   AlertTriangleIcon,
   SaveIcon,
+  SparklesIcon,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { GlassCard } from '../components/ui/GlassCard';
@@ -88,16 +89,25 @@ export function SettingsPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-12">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-white/10">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">System & Organization Settings</h1>
-          <p className="text-xs sm:text-sm text-gray-400 mt-1">
-            Configure default company branding, HR signatory details, and email delivery pipeline.
-          </p>
+    <div className="space-y-8 max-w-4xl mx-auto pb-12">
+      {/* Centered Hero Header - Matching Theme */}
+      <section className="flex flex-col items-center text-center space-y-4 pt-4">
+        <div className="flex items-center gap-2.5 glass px-4 py-1.5 rounded-full text-xs font-medium text-gray-200 shadow-xl border-white/20">
+          <SparklesIcon className="size-3.5 text-amber-400" />
+          <span>Enterprise Recruitment Email &amp; Document Automation</span>
         </div>
-      </div>
+
+        <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
+          System &amp; Company{' '}
+          <span className="bg-gradient-to-r from-[#D10A8A] via-[#F26A06] to-[#2E08CF] bg-clip-text text-transparent">
+            Settings
+          </span>
+        </h1>
+
+        <p className="text-gray-300 text-sm max-w-xl">
+          Configure default company branding, HR signatory details, and email delivery pipeline.
+        </p>
+      </section>
 
       {/* System Health Diagnostics */}
       <GlassCard animate={false} className="p-5 space-y-3">

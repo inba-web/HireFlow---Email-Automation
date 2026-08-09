@@ -17,8 +17,10 @@ import Footer from '../components/footer';
 import LenisScroll from '../components/lenis-scroll';
 import { AmbientBackground } from '../components/AmbientBackground';
 import { GlassButton } from '../components/ui/GlassButton';
+import { useUser } from '@clerk/clerk-react';
 
 export function LandingPage() {
+  const { isSignedIn } = useUser();
   const features = [
     {
       icon: UsersIcon,
@@ -122,16 +124,33 @@ export function LandingPage() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.5 }}
           >
-            <Link to="/dashboard" className="w-full sm:w-auto">
-              <GlassButton size="lg" variant="gradient" icon={ArrowRightIcon} className="w-full sm:w-auto">
-                Launch Platform
-              </GlassButton>
-            </Link>
-            <Link to="/sign-in" className="w-full sm:w-auto">
-              <GlassButton size="lg" variant="glass" className="w-full sm:w-auto">
-                Sign In with Clerk
-              </GlassButton>
-            </Link>
+            {isSignedIn ? (
+              <>
+                <Link to="/dashboard" className="w-full sm:w-auto">
+                  <GlassButton size="lg" variant="gradient" icon={ArrowRightIcon} className="w-full sm:w-auto">
+                    Go to Dashboard
+                  </GlassButton>
+                </Link>
+                <Link to="/campaigns/create" className="w-full sm:w-auto">
+                  <GlassButton size="lg" variant="glass" className="w-full sm:w-auto">
+                    Start Automation
+                  </GlassButton>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/sign-up" className="w-full sm:w-auto">
+                  <GlassButton size="lg" variant="gradient" icon={ArrowRightIcon} className="w-full sm:w-auto">
+                    Get Started Free
+                  </GlassButton>
+                </Link>
+                <Link to="/sign-in" className="w-full sm:w-auto">
+                  <GlassButton size="lg" variant="glass" className="w-full sm:w-auto">
+                    Sign In with Clerk
+                  </GlassButton>
+                </Link>
+              </>
+            )}
           </motion.div>
 
           {/* Quick Metrics Strip */}
@@ -156,7 +175,7 @@ export function LandingPage() {
         </section>
 
         {/* Feature Grid */}
-        <section className="space-y-12">
+        <section id="features" className="space-y-12 scroll-mt-24">
           <div className="text-center space-y-3">
             <span className="text-xs font-semibold uppercase tracking-widest text-[#D10A8A]">
               Platform Modules
@@ -190,7 +209,7 @@ export function LandingPage() {
         </section>
 
         {/* Workflow Steps */}
-        <section className="space-y-12">
+        <section id="workflow" className="space-y-12 scroll-mt-24">
           <div className="text-center space-y-3">
             <span className="text-xs font-semibold uppercase tracking-widest text-[#2E08CF]">
               Streamlined Process
@@ -222,9 +241,9 @@ export function LandingPage() {
               Say goodbye to manual document formatting and copy-pasting candidate emails.
             </p>
             <div className="pt-2">
-              <Link to="/dashboard">
+              <Link to={isSignedIn ? "/dashboard" : "/sign-up"}>
                 <GlassButton size="lg" variant="gradient" icon={ArrowRightIcon}>
-                  Open HireFlow Dashboard
+                  {isSignedIn ? "Open HireFlow Dashboard" : "Get Started with HireFlow"}
                 </GlassButton>
               </Link>
             </div>

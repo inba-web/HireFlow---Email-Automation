@@ -12,6 +12,7 @@ import {
   EyeIcon,
   CalendarIcon,
   UsersIcon,
+  SparklesIcon,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { GlassCard } from '../components/ui/GlassCard';
@@ -110,20 +111,31 @@ export function CampaignsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-white/10">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">Recruitment Campaigns</h1>
-          <p className="text-xs sm:text-sm text-gray-400 mt-1">
-            Monitor bulk automated email deliveries, track queue worker status, and analyze responses.
-          </p>
+    <div className="space-y-8">
+      {/* Centered Hero Header - Matching Theme */}
+      <section className="flex flex-col items-center text-center space-y-4 pt-4">
+        <div className="flex items-center gap-2.5 glass px-4 py-1.5 rounded-full text-xs font-medium text-gray-200 shadow-xl border-white/20">
+          <SparklesIcon className="size-3.5 text-amber-400" />
+          <span>Enterprise Recruitment Email &amp; Document Automation</span>
         </div>
 
-        <GlassButton size="sm" variant="gradient" icon={PlusIcon} onClick={() => navigate('/campaigns/create')}>
-          Create Campaign
-        </GlassButton>
-      </div>
+        <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
+          Recruitment{' '}
+          <span className="bg-gradient-to-r from-[#D10A8A] via-[#F26A06] to-[#2E08CF] bg-clip-text text-transparent">
+            Campaigns
+          </span>
+        </h1>
+
+        <p className="text-gray-300 text-sm max-w-xl">
+          Monitor automated bulk email dispatches, track queue worker throughput, and analyze responses.
+        </p>
+
+        <div className="pt-2">
+          <GlassButton size="md" variant="gradient" icon={PlusIcon} onClick={() => navigate('/campaigns/create')}>
+            Create Campaign
+          </GlassButton>
+        </div>
+      </section>
 
       {/* Filter Toolbar */}
       <GlassCard animate={false} className="p-4">

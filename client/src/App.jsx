@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { ClerkProvider, useAuth as useClerkAuth } from '@clerk/clerk-react';
+import { ClerkProvider, useAuth as useClerkAuth, useUser } from '@clerk/clerk-react';
 import { ToastProvider } from './context/ToastContext';
-import { AppLayout } from './layouts/AppLayout';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import { LandingPage } from './pages/LandingPage';
 import { AuthPage } from './pages/AuthPage';
 import { DashboardPage } from './pages/DashboardPage';
@@ -33,6 +33,11 @@ function TokenBridge() {
   return null;
 }
 
+function FallbackRedirect() {
+  const { isSignedIn } = useUser();
+  return <Navigate to={isSignedIn ? '/dashboard' : '/'} replace />;
+}
+
 export default function App() {
   const isKeyValid = Boolean(
     CLERK_PUBLISHABLE_KEY && !CLERK_PUBLISHABLE_KEY.includes('placeholder')
@@ -48,106 +53,106 @@ export default function App() {
         <Route path="/sign-in/*" element={<AuthPage mode="sign-in" />} />
         <Route path="/sign-up/*" element={<AuthPage mode="sign-up" />} />
 
-        {/* Protected App Shell Routes */}
+        {/* Protected App Shell Routes - Guarded with ProtectedRoute */}
         <Route
           path="/dashboard"
           element={
-            <AppLayout>
+            <ProtectedRoute>
               <DashboardPage />
-            </AppLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/candidates"
           element={
-            <AppLayout>
+            <ProtectedRoute>
               <CandidatesPage />
-            </AppLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/campaigns"
           element={
-            <AppLayout>
+            <ProtectedRoute>
               <CampaignsPage />
-            </AppLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/campaigns/create"
           element={
-            <AppLayout>
+            <ProtectedRoute>
               <CampaignWizardPage />
-            </AppLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/campaigns/:id"
           element={
-            <AppLayout>
+            <ProtectedRoute>
               <CampaignDetailPage />
-            </AppLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/email-templates"
           element={
-            <AppLayout>
+            <ProtectedRoute>
               <EmailTemplatesPage />
-            </AppLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/document-templates"
           element={
-            <AppLayout>
+            <ProtectedRoute>
               <DocumentTemplatesPage />
-            </AppLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/documents"
           element={
-            <AppLayout>
+            <ProtectedRoute>
               <DocumentsPage />
-            </AppLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/email-logs"
           element={
-            <AppLayout>
+            <ProtectedRoute>
               <EmailLogsPage />
-            </AppLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/analytics"
           element={
-            <AppLayout>
+            <ProtectedRoute>
               <AnalyticsPage />
-            </AppLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/audit-logs"
           element={
-            <AppLayout>
+            <ProtectedRoute>
               <AuditLogsPage />
-            </AppLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/settings"
           element={
-            <AppLayout>
+            <ProtectedRoute>
               <SettingsPage />
-            </AppLayout>
+            </ProtectedRoute>
           }
         />
 
         {/* Catch-all fallback */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<FallbackRedirect />} />
       </Routes>
     </ToastProvider>
   );

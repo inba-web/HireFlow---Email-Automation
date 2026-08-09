@@ -20,13 +20,18 @@ export function setClerkTokenGetter(fn) {
 api.interceptors.request.use(async (config) => {
   try {
     if (getClerkTokenFn) {
-      const token = await getClerkTokenFn();
+      // Add a 3.5s timeout race to prevent requests from hanging if Clerk network requests time out
+      const tokenPromise = getClerkTokenFn();
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Clerk token retrieval timed out')), 3500)
+      );
+      const token = await Promise.race([tokenPromise, timeoutPromise]);
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
   } catch (err) {
-    console.warn('Failed to retrieve Clerk token for API request:', err);
+    console.warn('Failed to retrieve Clerk token for API request:', err?.message || err);
   }
   return config;
 }, (error) => {

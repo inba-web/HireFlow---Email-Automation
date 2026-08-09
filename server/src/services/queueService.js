@@ -12,6 +12,7 @@ import { interpolateTemplate, sanitizeEmailHtml, buildTemplateContext } from './
 import { recordAudit } from './auditService.js';
 import { logger } from '../utils/logger.js';
 import { isDBConnected } from '../config/db.js';
+import { mockStore } from '../utils/mockStore.js';
 
 const QUEUE_NAME = 'recruitment-email-queue';
 
@@ -23,57 +24,74 @@ const inMemoryQueue = [];
 let isProcessingMemoryQueue = false;
 
 /**
- * Processes a single email job idempotently.
+ * Processes a single email job idempotently and sends real emails via SMTP.
  */
 export async function processEmailJob({ campaignId, candidateId, idempotencyKey }) {
-  if (!isDBConnected()) {
-    logger.info(`Processing email dispatch in development mode for candidate ${candidateId}`);
-    return { success: true, simulated: true };
-  }
+  let campaign = null;
+  let candidate = null;
+  let settings = null;
+  let jobRecord = null;
 
-  // 1. Idempotency verification
-  let jobRecord = await EmailJob.findOne({ idempotencyKey });
-  if (jobRecord && (jobRecord.status === 'Sent' || jobRecord.status === 'Delivered')) {
-    logger.info(`Idempotency check: Job ${idempotencyKey} already completed. Skipping.`);
-    return { skipped: true, reason: 'Already processed' };
-  }
+  if (isDBConnected()) {
+    jobRecord = await EmailJob.findOne({ idempotencyKey });
+    if (jobRecord && (jobRecord.status === 'Sent' || jobRecord.status === 'Delivered')) {
+      logger.info(`Idempotency check: Job ${idempotencyKey} already completed. Skipping.`);
+      return { skipped: true, reason: 'Already processed' };
+    }
 
-  if (!jobRecord) {
-    jobRecord = await EmailJob.create({
-      campaignId,
-      candidateId,
-      idempotencyKey,
-      status: 'Processing',
-      attemptCount: 1,
-    });
-  } else {
-    jobRecord.status = 'Processing';
-    jobRecord.attemptCount += 1;
-    await jobRecord.save();
-  }
+    if (!jobRecord) {
+      jobRecord = await EmailJob.create({
+        campaignId,
+        candidateId,
+        idempotencyKey,
+        status: 'Processing',
+        attemptCount: 1,
+      });
+    } else {
+      jobRecord.status = 'Processing';
+      jobRecord.attemptCount += 1;
+      await jobRecord.save();
+    }
 
-  try {
-    const [campaign, candidate, settings] = await Promise.all([
+    [campaign, candidate, settings] = await Promise.all([
       Campaign.findById(campaignId).populate('emailTemplateId').populate('documentTemplateId'),
       Candidate.findById(candidateId),
       SystemSettings.findOne() || {},
     ]);
+  } else {
+    // In-memory fallback mode
+    campaign = mockStore.campaigns.find((c) => c._id === campaignId);
+    candidate = mockStore.candidates.find((c) => c._id === candidateId || c.candidateId === candidateId);
+    settings = {
+      companyName: 'HireFlow Technologies Inc.',
+      companyEmail: 'inbafreakz@gmail.com',
+      hrName: 'Sarah Jenkins (Director of Talent Acquisition)',
+      companyAddress: '500 Howard Street, San Francisco, CA',
+    };
+  }
 
-    if (!campaign || !candidate) {
-      throw new Error(`Campaign (${campaignId}) or Candidate (${candidateId}) not found`);
-    }
+  if (!campaign || !candidate) {
+    logger.error(`Campaign (${campaignId}) or Candidate (${candidateId}) not found during email dispatch.`);
+    return { success: false, reason: 'Resource not found' };
+  }
 
-    const emailTemplate = campaign.emailTemplateId;
-    const documentTemplate = campaign.documentTemplateId;
+  const emailTemplate = campaign.emailTemplateId?._id
+    ? campaign.emailTemplateId
+    : mockStore.emailTemplates.find((t) => t._id === campaign.emailTemplateId) || mockStore.emailTemplates[0];
 
-    if (!emailTemplate) {
-      throw new Error(`Email template missing for campaign: ${campaign.name}`);
-    }
+  const documentTemplate = campaign.documentTemplateId?._id
+    ? campaign.documentTemplateId
+    : mockStore.documentTemplates.find((d) => d._id === campaign.documentTemplateId) || null;
 
-    // 2. Build context
+  if (!emailTemplate) {
+    throw new Error(`Email template missing for campaign: ${campaign.name}`);
+  }
+
+  try {
+    // 1. Build context dictionary
     const context = buildTemplateContext(candidate, settings);
 
-    // 3. Generate personalized document if attached
+    // 2. Generate personalized document if template is attached
     const attachments = [];
     if (documentTemplate) {
       const generated = await generateDocumentPdf({
@@ -82,20 +100,23 @@ export async function processEmailJob({ campaignId, candidateId, idempotencyKey 
         context,
         campaignId: campaign._id,
       });
+
       attachments.push({
         fileName: generated.fileName,
         filePath: generated.filePath,
         fileType: 'application/pdf',
       });
+      logger.info(`Attached PDF document: ${generated.fileName} for candidate ${candidate.fullName}`);
     }
 
-    // 4. Personalize Subject & HTML
+    // 3. Personalize Subject & Body HTML
     const personalizedSubject = interpolateTemplate(emailTemplate.subject, context);
     const rawBody = interpolateTemplate(emailTemplate.bodyHtml, context);
     const sanitizedBody = sanitizeEmailHtml(rawBody);
 
-    // 5. Send Email via configured provider (Gmail SMTP)
-    await sendEmail({
+    // 4. Send Email via Gmail SMTP
+    logger.info(`Sending live email to ${candidate.email} (Subject: ${personalizedSubject})...`);
+    const emailResult = await sendEmail({
       candidate,
       campaign,
       subject: personalizedSubject,
@@ -103,37 +124,67 @@ export async function processEmailJob({ campaignId, candidateId, idempotencyKey 
       attachments,
     });
 
-    // 6. Update job status
-    jobRecord.status = 'Sent';
-    jobRecord.processedAt = new Date();
-    await jobRecord.save();
+    logger.info(`Email successfully dispatched to ${candidate.email} (MessageId: ${emailResult.messageId})`);
 
-    // 7. Update Campaign stats
-    await Campaign.findByIdAndUpdate(campaignId, {
-      $inc: { 'stats.sent': 1, 'stats.delivered': 1 },
-    });
+    // 5. Update Status & Telemetry
+    if (isDBConnected()) {
+      if (jobRecord) {
+        jobRecord.status = 'Sent';
+        jobRecord.processedAt = new Date();
+        await jobRecord.save();
+      }
 
-    // 8. Update candidate status
-    if (emailTemplate.category === 'Offer' && candidate.status !== 'Offer Sent') {
-      candidate.status = 'Offer Sent';
-      await candidate.save();
-    } else if (emailTemplate.category === 'Interview' && candidate.status === 'Applied') {
-      candidate.status = 'Interview';
-      await candidate.save();
+      await Campaign.findByIdAndUpdate(campaignId, {
+        $inc: { 'stats.sent': 1, 'stats.delivered': 1 },
+      });
+
+      if (emailTemplate.category === 'Offer' && candidate.status !== 'Offer Sent') {
+        candidate.status = 'Offer Sent';
+        await candidate.save();
+      } else if (emailTemplate.category === 'Interview' && candidate.status === 'Applied') {
+        candidate.status = 'Interview';
+        await candidate.save();
+      }
+    } else {
+      if (campaign.stats) {
+        campaign.stats.sent = (campaign.stats.sent || 0) + 1;
+        campaign.stats.delivered = (campaign.stats.delivered || 0) + 1;
+      }
+      mockStore.emailLogs.unshift({
+        _id: `log_${Date.now()}`,
+        candidateId: candidate._id,
+        candidateName: candidate.fullName,
+        campaignId: campaign._id,
+        campaignName: campaign.name,
+        recipient: candidate.email,
+        subject: personalizedSubject,
+        status: 'Delivered',
+        providerMessageId: emailResult.messageId || `msg_${Date.now()}`,
+        attemptCount: 1,
+        sentAt: new Date(),
+        deliveredAt: new Date(),
+        createdAt: new Date(),
+      });
     }
 
-    return { success: true };
+    return { success: true, messageId: emailResult.messageId };
   } catch (error) {
     logger.error(`Error processing job ${idempotencyKey}: ${error.message}`);
-    if (jobRecord) {
-      jobRecord.status = 'Failed';
-      jobRecord.lastError = error.message;
-      await jobRecord.save();
-    }
+    if (isDBConnected()) {
+      if (jobRecord) {
+        jobRecord.status = 'Failed';
+        jobRecord.lastError = error.message;
+        await jobRecord.save();
+      }
 
-    await Campaign.findByIdAndUpdate(campaignId, {
-      $inc: { 'stats.failed': 1 },
-    });
+      await Campaign.findByIdAndUpdate(campaignId, {
+        $inc: { 'stats.failed': 1 },
+      });
+    } else {
+      if (campaign.stats) {
+        campaign.stats.failed = (campaign.stats.failed || 0) + 1;
+      }
+    }
 
     throw error;
   }
@@ -150,7 +201,7 @@ async function processNextInMemoryJob() {
     const jobData = inMemoryQueue.shift();
     try {
       await processEmailJob(jobData);
-      await new Promise((r) => setTimeout(r, 200));
+      await new Promise((r) => setTimeout(r, 400));
     } catch (err) {
       logger.warn(`In-memory async job processed: ${err.message}`);
     }
@@ -171,6 +222,10 @@ export async function queueCampaignJobs(campaign) {
     campaign.status = 'Processing';
     campaign.stats.totalRecipients = candidateIds.length;
     await campaign.save();
+  } else {
+    campaign.status = 'Processing';
+    if (!campaign.stats) campaign.stats = {};
+    campaign.stats.totalRecipients = candidateIds.length;
   }
 
   for (const candidateId of candidateIds) {

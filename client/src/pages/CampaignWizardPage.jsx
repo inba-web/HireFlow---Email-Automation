@@ -15,6 +15,8 @@ import {
   SearchIcon,
   ClockIcon,
   AlertTriangleIcon,
+  FilterIcon,
+  AwardIcon,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { api } from '../services/api';
@@ -52,16 +54,17 @@ export function CampaignWizardPage() {
   const [selectedCandidateIds, setSelectedCandidateIds] = useState([]);
   const [selectedEmailTemplateId, setSelectedEmailTemplateId] = useState('');
   const [selectedDocTemplateId, setSelectedDocTemplateId] = useState('');
-  const [sendOption, setSendOption] = useState('immediate'); // 'immediate' | 'scheduled'
+  const [sendOption, setSendOption] = useState('immediate');
   const [scheduledAt, setScheduledAt] = useState('');
+
+  // Step 2 Filters
+  const [candidateSearch, setCandidateSearch] = useState('');
+  const [candidatePurposeFilter, setCandidatePurposeFilter] = useState('all'); // 'all' | 'offer' | 'interview' | 'pdf'
 
   // Preview State
   const [previewCandidateIndex, setPreviewCandidateIndex] = useState(0);
   const [previewData, setPreviewData] = useState(null);
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
-
-  // Search in Candidate step
-  const [candidateSearch, setCandidateSearch] = useState('');
 
   useEffect(() => {
     async function loadResources() {
@@ -159,7 +162,7 @@ export function CampaignWizardPage() {
             spread: 70,
             origin: { y: 0.6 },
           });
-          success(`Campaign "${campaign.name}" dispatched to background queue!`);
+          success(`Campaign "${campaign.name}" dispatched! Real emails are transmitting to candidate inboxes.`);
         } else {
           success(`Campaign "${campaign.name}" scheduled for ${new Date(scheduledAt).toLocaleString()}`);
         }
@@ -173,10 +176,32 @@ export function CampaignWizardPage() {
     }
   };
 
-  const filteredCandidates = candidates.filter((c) =>
-    c.fullName?.toLowerCase().includes(candidateSearch.toLowerCase()) ||
-    c.email?.toLowerCase().includes(candidateSearch.toLowerCase()) ||
-    c.jobRole?.toLowerCase().includes(candidateSearch.toLowerCase())
+  // Filter candidates based on purpose
+  const filteredCandidates = candidates.filter((c) => {
+    const matchesSearch =
+      c.fullName?.toLowerCase().includes(candidateSearch.toLowerCase()) ||
+      c.email?.toLowerCase().includes(candidateSearch.toLowerCase()) ||
+      c.jobRole?.toLowerCase().includes(candidateSearch.toLowerCase());
+
+    if (!matchesSearch) return false;
+
+    if (candidatePurposeFilter === 'offer') {
+      return ['Selected', 'Shortlisted', 'Offer Sent', 'Offer Accepted'].includes(c.status);
+    }
+    if (candidatePurposeFilter === 'interview') {
+      return ['Applied', 'Interview', 'Screening'].includes(c.status);
+    }
+    if (candidatePurposeFilter === 'pdf') {
+      return Boolean(c.salary && c.joiningDate);
+    }
+    return true;
+  });
+
+  const offerCandidates = candidates.filter((c) =>
+    ['Selected', 'Shortlisted', 'Offer Sent', 'Offer Accepted'].includes(c.status)
+  );
+  const interviewCandidates = candidates.filter((c) =>
+    ['Applied', 'Interview', 'Screening'].includes(c.status)
   );
 
   const selectedCandidatesList = candidates.filter((c) => selectedCandidateIds.includes(c._id));
@@ -184,21 +209,44 @@ export function CampaignWizardPage() {
   const chosenDocTemplate = docTemplates.find((t) => t._id === selectedDocTemplateId);
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-16">
-      {/* Header */}
-      <div className="flex items-center justify-between pb-2 border-b border-white/10">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">Create Recruitment Campaign</h1>
-          <p className="text-xs sm:text-sm text-gray-400 mt-1">
-            7-step guided workflow with automated personalization and live PDF preview.
-          </p>
-        </div>
-      </div>
+    <div className="space-y-8 max-w-4xl mx-auto pb-16">
+      {/* Centered Hero Header - Matching Theme */}
+      <section className="flex flex-col items-center text-center space-y-4 pt-4">
+        <motion.div
+          className="flex items-center gap-2.5 glass px-4 py-1.5 rounded-full text-xs font-medium text-gray-200 shadow-xl border-white/20"
+          initial={{ y: -15, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.4 }}
+        >
+          <SparklesIcon className="size-3.5 text-amber-400" />
+          <span>Enterprise Recruitment Email &amp; Document Automation</span>
+        </motion.div>
+
+        <motion.h1
+          className="text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight"
+          initial={{ y: 15, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
+        >
+          Start{' '}
+          <span className="bg-gradient-to-r from-[#D10A8A] via-[#F26A06] to-[#2E08CF] bg-clip-text text-transparent">
+            Automation Wizard
+          </span>
+        </motion.h1>
+
+        <motion.p
+          className="text-gray-300 text-sm max-w-xl"
+          initial={{ y: 15, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
+        >
+          7-step guided workflow with candidate intent filtering, automated PDF generation, and verified live personalization.
+        </motion.p>
+      </section>
 
       {/* Wizard Progress Bar */}
-      <div className="glass p-4 rounded-2xl border border-white/15 overflow-x-auto custom-scrollbar">
+      <div className="glass p-4 rounded-2xl border border-white/15 overflow-x-auto custom-scrollbar shadow-2xl">
         <div className="flex items-center justify-between min-w-[600px] relative">
-          {/* Progress line */}
           <div className="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-0.5 bg-white/10 -z-1" />
           <div
             className="absolute left-6 top-1/2 -translate-y-1/2 h-0.5 bg-gradient-to-r from-[#D10A8A] to-[#2E08CF] -z-1 transition-all duration-300"
@@ -241,7 +289,7 @@ export function CampaignWizardPage() {
       </div>
 
       {/* Wizard Content Step Container */}
-      <GlassCard animate={false} className="p-6 sm:p-8 space-y-6">
+      <GlassCard animate={false} className="p-6 sm:p-8 space-y-6 shadow-2xl">
         <AnimatePresence mode="wait">
           {/* STEP 1: Campaign Details */}
           {currentStep === 1 && (
@@ -275,7 +323,7 @@ export function CampaignWizardPage() {
             </motion.div>
           )}
 
-          {/* STEP 2: Select Candidates */}
+          {/* STEP 2: Select Candidates with Purpose Filters */}
           {currentStep === 2 && (
             <motion.div
               key="step2"
@@ -287,7 +335,9 @@ export function CampaignWizardPage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <h3 className="text-xl font-bold text-white">Step 2: Select Target Candidates</h3>
-                  <p className="text-xs text-gray-400">Choose recipients who will receive personalized communications.</p>
+                  <p className="text-xs text-gray-400">
+                    Filter by Offer Letters, Interview Invitations, or with attached PDF contracts.
+                  </p>
                 </div>
 
                 <div className="text-xs font-semibold text-indigo-300">
@@ -295,7 +345,47 @@ export function CampaignWizardPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              {/* Workflow Purpose Filter Tabs */}
+              <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-xl glass bg-white/5 border border-white/10 text-xs">
+                <button
+                  onClick={() => setCandidatePurposeFilter('all')}
+                  className={`py-1.5 px-3 rounded-lg font-medium transition cursor-pointer ${
+                    candidatePurposeFilter === 'all' ? 'glass bg-white/20 text-white font-semibold' : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  All Candidates ({candidates.length})
+                </button>
+                <button
+                  onClick={() => setCandidatePurposeFilter('offer')}
+                  className={`py-1.5 px-3 rounded-lg font-medium transition cursor-pointer flex items-center gap-1.5 ${
+                    candidatePurposeFilter === 'offer' ? 'glass bg-fuchsia-500/30 text-fuchsia-200 border-fuchsia-400/40 font-semibold' : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  <AwardIcon className="size-3.5 text-fuchsia-400" />
+                  <span>For Offer Letters ({offerCandidates.length})</span>
+                </button>
+                <button
+                  onClick={() => setCandidatePurposeFilter('interview')}
+                  className={`py-1.5 px-3 rounded-lg font-medium transition cursor-pointer flex items-center gap-1.5 ${
+                    candidatePurposeFilter === 'interview' ? 'glass bg-cyan-500/30 text-cyan-200 border-cyan-400/40 font-semibold' : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  <UsersIcon className="size-3.5 text-cyan-400" />
+                  <span>For Interviews ({interviewCandidates.length})</span>
+                </button>
+                <button
+                  onClick={() => setCandidatePurposeFilter('pdf')}
+                  className={`py-1.5 px-3 rounded-lg font-medium transition cursor-pointer flex items-center gap-1.5 ${
+                    candidatePurposeFilter === 'pdf' ? 'glass bg-emerald-500/30 text-emerald-200 border-emerald-400/40 font-semibold' : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  <FileSignatureIcon className="size-3.5 text-emerald-400" />
+                  <span>With PDF Info</span>
+                </button>
+              </div>
+
+              {/* Search and Quick Selection Actions */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
                 <div className="flex-1">
                   <GlassInput
                     icon={SearchIcon}
@@ -305,24 +395,39 @@ export function CampaignWizardPage() {
                   />
                 </div>
 
-                <GlassButton
-                  size="sm"
-                  variant="outline"
-                  onClick={() => {
-                    if (selectedCandidateIds.length === candidates.length) {
-                      setSelectedCandidateIds([]);
-                    } else {
-                      setSelectedCandidateIds(candidates.map((c) => c._id));
-                    }
-                  }}
-                >
-                  {selectedCandidateIds.length === candidates.length ? 'Deselect All' : 'Select All'}
-                </GlassButton>
+                <div className="flex items-center gap-2">
+                  <GlassButton
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      if (candidatePurposeFilter === 'offer') {
+                        setSelectedCandidateIds(offerCandidates.map((c) => c._id));
+                      } else if (candidatePurposeFilter === 'interview') {
+                        setSelectedCandidateIds(interviewCandidates.map((c) => c._id));
+                      } else {
+                        setSelectedCandidateIds(filteredCandidates.map((c) => c._id));
+                      }
+                    }}
+                  >
+                    Select Filtered
+                  </GlassButton>
+                  <GlassButton
+                    size="sm"
+                    variant="glass"
+                    onClick={() => setSelectedCandidateIds([])}
+                  >
+                    Clear
+                  </GlassButton>
+                </div>
               </div>
 
+              {/* Candidate Cards List */}
               <div className="max-h-72 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
                 {filteredCandidates.map((cand) => {
                   const isSelected = selectedCandidateIds.includes(cand._id);
+                  const isOfferReady = ['Selected', 'Shortlisted', 'Offer Sent'].includes(cand.status);
+                  const hasPdfDetails = Boolean(cand.salary && cand.joiningDate);
+
                   return (
                     <div
                       key={cand._id}
@@ -339,21 +444,43 @@ export function CampaignWizardPage() {
                     >
                       <div className="flex items-center gap-3">
                         <div
-                          className={`size-4 rounded border flex items-center justify-center transition ${
+                          className={`size-4.5 rounded border flex items-center justify-center transition ${
                             isSelected ? 'bg-indigo-500 border-indigo-400' : 'border-white/30'
                           }`}
                         >
-                          {isSelected && <CheckCircle2Icon className="size-3 text-white" />}
+                          {isSelected && <CheckCircle2Icon className="size-3.5 text-white" />}
                         </div>
                         <div>
-                          <div className="font-semibold text-white text-sm">{cand.fullName}</div>
-                          <div className="text-xs text-gray-400">
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-white text-sm">{cand.fullName}</span>
+                            {isOfferReady ? (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/30">
+                                📜 Offer Letter Candidate
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                                🎙️ Interview Stage
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-xs text-gray-400 mt-0.5">
                             {cand.email} • {cand.jobRole} ({cand.department})
                           </div>
                         </div>
                       </div>
 
-                      <GlassBadge status={cand.status} />
+                      <div className="flex items-center gap-2">
+                        {hasPdfDetails ? (
+                          <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                            📄 PDF Supported
+                          </span>
+                        ) : (
+                          <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] bg-white/5 text-gray-400 border border-white/10">
+                            ✉️ Email Only
+                          </span>
+                        )}
+                        <GlassBadge status={cand.status} />
+                      </div>
                     </div>
                   );
                 })}
@@ -479,7 +606,6 @@ export function CampaignWizardPage() {
                   </p>
                 </div>
 
-                {/* Candidate switcher */}
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-gray-400">Previewing:</span>
                   <select
@@ -496,7 +622,6 @@ export function CampaignWizardPage() {
                 </div>
               </div>
 
-              {/* Preview Card */}
               {isPreviewLoading ? (
                 <div className="p-12 text-center text-gray-400 glass rounded-2xl animate-pulse">
                   Generating dynamic candidate preview...
@@ -522,7 +647,6 @@ export function CampaignWizardPage() {
                     )}
                   </div>
 
-                  {/* Body HTML */}
                   <div
                     className="p-4 rounded-xl bg-white text-gray-900 text-xs leading-relaxed max-h-60 overflow-y-auto"
                     dangerouslySetInnerHTML={{ __html: previewData.bodyHtml }}
@@ -559,7 +683,7 @@ export function CampaignWizardPage() {
                     <SparklesIcon className="size-4 text-amber-400" />
                     <span>Send Immediately</span>
                   </div>
-                  <p className="text-xs text-gray-400">Dispatches campaign directly to BullMQ asynchronous worker queue.</p>
+                  <p className="text-xs text-gray-400">Dispatches campaign directly to background worker queue.</p>
                 </div>
 
                 <div
@@ -638,7 +762,7 @@ export function CampaignWizardPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Document Template:</span>
-                  <span className="font-semibold text-white">{chosenDocTemplate?.name || 'None'}</span>
+                  <span className="font-semibold text-white">{chosenDocTemplate?.name || 'None (Email Only)'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Idempotency Guard:</span>
