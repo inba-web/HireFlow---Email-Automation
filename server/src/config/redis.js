@@ -10,35 +10,32 @@ export function getRedisClient() {
 
   // If no REDIS_URL or localhost, probe gently
   try {
+    const isTls = config.REDIS_URL?.startsWith('rediss://');
     redisClient = new Redis(config.REDIS_URL, {
       maxRetriesPerRequest: null,
-      enableReadyCheck: false,
-      autoResubscribe: false,
-      reconnectOnError: () => false,
+      enableReadyCheck: true,
+      ...(isTls ? { tls: { rejectUnauthorized: false } } : {}),
       retryStrategy(times) {
-        if (times > 1) {
-          return null; // Stop reconnecting after 1 attempt
+        if (times > 5) {
+          return null; // Stop reconnecting after 5 attempts
         }
-        return 1000;
+        return Math.min(times * 500, 2000);
       },
-      lazyConnect: true,
+      lazyConnect: false,
     });
 
     redisClient.on('connect', () => {
+      logger.info('Connecting to Redis server...');
+    });
+
+    redisClient.on('ready', () => {
       isRedisAvailable = true;
-      logger.info('Connected to Redis server');
+      logger.info('Successfully connected and ready on Redis');
     });
 
     redisClient.on('error', (err) => {
       isRedisAvailable = false;
-      // Suppress unhandled crash noise
-    });
-
-    redisClient.connect().then(() => {
-      isRedisAvailable = true;
-    }).catch(() => {
-      isRedisAvailable = false;
-      logger.info('Redis server not active. Using in-memory async worker queue.');
+      logger.warn(`Redis connection event: ${err.message}`);
     });
 
     return redisClient;
