@@ -476,7 +476,7 @@ export function CandidatesPage() {
             <GlassInput
               label="Full Name"
               required
-              placeholder="e.g. Inba Kumar"
+              placeholder="e.g. Inbavarunan"
               value={formData.fullName}
               onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
             />

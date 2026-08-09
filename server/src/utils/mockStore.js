@@ -195,65 +195,8 @@ export const mockStore = {
     }
   ],
 
-  campaigns: [
-    {
-      _id: 'camp_1',
-      name: '2026 Fall Engineering Offers',
-      description: 'Formal job offers and compensation packages for shortlisted candidates.',
-      recipientCandidateIds: ['cand_1001', 'cand_1002'],
-      emailTemplateId: { _id: 'tpl_1', name: 'Job Offer Letter & Welcome', category: 'Offer' },
-      documentTemplateId: { _id: 'doc_tpl_1', name: 'Executive Offer Letter Agreement', type: 'offer_letter' },
-      status: 'Completed',
-      stats: { totalRecipients: 2, sent: 2, delivered: 2, failed: 0, retrying: 0 },
-      createdAt: new Date('2026-08-06'),
-    }
-  ],
-
-  emailLogs: [
-    {
-      _id: 'log_1',
-      candidateId: 'cand_1001',
-      candidateName: 'Inbavarunan Kumar',
-      campaignId: 'camp_1',
-      campaignName: '2026 Fall Engineering Offers',
-      recipient: 'inbafreakz@gmail.com',
-      subject: 'Congratulations Inbavarunan Kumar — Formal Offer for Lead Full Stack Architect at HireFlow Technologies Inc.',
-      status: 'Delivered',
-      providerMessageId: 'msg_sample_1001',
-      attemptCount: 1,
-      sentAt: new Date('2026-08-06T10:00:00Z'),
-      deliveredAt: new Date('2026-08-06T10:00:02Z'),
-      createdAt: new Date('2026-08-06T10:00:00Z'),
-    }
-  ],
-
-  documents: [
-    {
-      _id: 'doc_1',
-      candidateId: 'cand_1001',
-      candidateName: 'Inbavarunan Kumar',
-      documentTemplateId: 'doc_tpl_1',
-      templateName: 'Executive Offer Letter Agreement',
-      campaignId: 'camp_1',
-      fileName: 'Inbavarunan_Kumar_offer_letter.pdf',
-      fileType: 'application/pdf',
-      fileSize: 48210,
-      storagePath: '',
-      generatedAt: new Date('2026-08-06T10:00:00Z'),
-    }
-  ],
-
-  auditLogs: [
-    {
-      _id: 'audit_1',
-      clerkUserId: 'user_dev_1',
-      userName: 'HR Administrator',
-      userEmail: 'inbafreakz@gmail.com',
-      action: 'CAMPAIGN_QUEUED',
-      resourceType: 'Campaign',
-      resourceId: 'camp_1',
-      details: { campaignName: '2026 Fall Engineering Offers', recipientCount: 2 },
-      createdAt: new Date('2026-08-06T09:59:00Z'),
-    }
-  ]
+  campaigns: [],
+  emailLogs: [],
+  documents: [],
+  auditLogs: []
 };

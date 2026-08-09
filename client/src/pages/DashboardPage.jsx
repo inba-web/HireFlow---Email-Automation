@@ -41,15 +41,15 @@ export function DashboardPage() {
       console.warn('Dashboard fetch error:', err.message);
       setAnalytics({
         metrics: {
-          totalCandidates: 5,
-          selectedCandidates: 2,
-          emailsSent: 12,
-          emailsDelivered: 12,
+          totalCandidates: 0,
+          selectedCandidates: 0,
+          emailsSent: 0,
+          emailsDelivered: 0,
           emailsFailed: 0,
           scheduledEmails: 0,
-          activeCampaigns: 1,
-          documentsGenerated: 4,
-          deliveryRate: 100,
+          activeCampaigns: 0,
+          documentsGenerated: 0,
+          deliveryRate: 0,
         },
         recentCampaigns: [],
         recentLogs: [],

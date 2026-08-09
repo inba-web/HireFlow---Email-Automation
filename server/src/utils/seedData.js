@@ -53,12 +53,35 @@ export async function seedInitialData() {
           variables: ['candidateName', 'jobRole', 'department', 'companyName', 'location', 'salary', 'joiningDate', 'currentDate', 'hrName', 'companyEmail'],
         },
         {
+          name: 'Executive Leadership Appointment Letter',
+          category: 'Offer',
+          subject: 'Executive Appointment: {{jobRole}} — {{candidateName}}',
+          bodyHtml: `
+            <div style="font-family: Arial, sans-serif; color: #1f2937; line-height: 1.6; max-width: 600px; margin: auto;">
+              <h2 style="color: #6366f1; border-bottom: 2px solid #e0e7ff; padding-bottom: 10px;">Executive Appointment</h2>
+              <p>Dear <strong>{{candidateName}}</strong>,</p>
+              <p>The Board of Directors and executive leadership team at <strong>{{companyName}}</strong> are thrilled to formally appoint you as <strong>{{jobRole}}</strong> heading the <strong>{{department}}</strong> division.</p>
+              <div style="background-color: #f8fafc; border-left: 4px solid #6366f1; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                <p style="margin: 4px 0;"><strong>Role &amp; Title:</strong> {{jobRole}}</p>
+                <p style="margin: 4px 0;"><strong>Executive Base Compensation:</strong> {{salary}}</p>
+                <p style="margin: 4px 0;"><strong>Effective Joining Date:</strong> {{joiningDate}}</p>
+                <p style="margin: 4px 0;"><strong>Location:</strong> {{location}}</p>
+              </div>
+              <p>Please review the attached formal <strong>Executive Employment Agreement</strong> with comprehensive equity clauses.</p>
+              <br/>
+              <p>Sincerely,</p>
+              <p><strong>{{hrName}}</strong><br/>{{companyName}}</p>
+            </div>
+          `,
+          variables: ['candidateName', 'jobRole', 'department', 'companyName', 'location', 'salary', 'joiningDate', 'hrName'],
+        },
+        {
           name: 'Interview Invitation — Technical Round',
           category: 'Interview',
           subject: 'Interview Invitation: {{jobRole}} at {{companyName}} — {{candidateName}}',
           bodyHtml: `
             <div style="font-family: Arial, sans-serif; color: #1f2937; line-height: 1.6; max-width: 600px; margin: auto;">
-              <h2 style="color: #0284c7; border-bottom: 2px solid #e0f2fe; padding-bottom: 10px;">Interview Schedule</h2>
+              <h2 style="color: #0284c7; border-bottom: 2px solid #e0f2fe; padding-bottom: 10px;">Technical Interview Invitation</h2>
               <p>Dear <strong>{{candidateName}}</strong>,</p>
               <p>Thank you for applying for the <strong>{{jobRole}}</strong> position at <strong>{{companyName}}</strong>. Our engineering leadership team was impressed by your profile.</p>
               <p>We would love to invite you for a 45-minute technical discussion regarding your background, architecture patterns, and our upcoming roadmap.</p>
@@ -71,22 +94,48 @@ export async function seedInitialData() {
           variables: ['candidateName', 'jobRole', 'companyName', 'hrName'],
         },
         {
-          name: 'Internship Completion Certificate',
+          name: 'Internship Offer & Stipend Details',
           category: 'Internship',
-          subject: 'Internship Certificate & Letter of Recommendation — {{candidateName}}',
+          subject: 'Internship Offer: {{jobRole}} Intern at {{companyName}} — {{candidateName}}',
           bodyHtml: `
             <div style="font-family: Arial, sans-serif; color: #1f2937; line-height: 1.6; max-width: 600px; margin: auto;">
-              <h2 style="color: #059669; border-bottom: 2px solid #d1fae5; padding-bottom: 10px;">Internship Completion</h2>
+              <h2 style="color: #059669; border-bottom: 2px solid #d1fae5; padding-bottom: 10px;">Internship Offer</h2>
               <p>Dear <strong>{{candidateName}}</strong>,</p>
-              <p>Congratulations on successfully completing your tenure as a <strong>{{jobRole}} Intern</strong> at <strong>{{companyName}}</strong>!</p>
-              <p>Your official <strong>Internship Certificate</strong> is attached to this email as a verifiable PDF.</p>
-              <p>We wish you immense success in your academic and professional endeavors.</p>
+              <p>We are delighted to offer you an internship as a <strong>{{jobRole}} Intern</strong> with our <strong>{{department}}</strong> team at <strong>{{companyName}}</strong>!</p>
+              <div style="background-color: #f0fdf4; border-left: 4px solid #059669; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                <p style="margin: 4px 0;"><strong>Monthly Stipend:</strong> {{salary}}</p>
+                <p style="margin: 4px 0;"><strong>Start Date:</strong> {{joiningDate}}</p>
+                <p style="margin: 4px 0;"><strong>Workplace:</strong> {{location}}</p>
+              </div>
+              <p>Attached is your official <strong>Internship Appointment Letter</strong>.</p>
               <br/>
-              <p>Sincerely,</p>
+              <p>Warm regards,</p>
               <p><strong>{{hrName}}</strong><br/>{{companyName}}</p>
             </div>
           `,
-          variables: ['candidateName', 'jobRole', 'companyName', 'hrName'],
+          variables: ['candidateName', 'jobRole', 'department', 'companyName', 'location', 'salary', 'joiningDate', 'hrName'],
+        },
+        {
+          name: 'Day-1 Onboarding & Welcome Guide',
+          category: 'Onboarding',
+          subject: 'Welcome to {{companyName}}, {{candidateName}}! Day 1 Onboarding Details',
+          bodyHtml: `
+            <div style="font-family: Arial, sans-serif; color: #1f2937; line-height: 1.6; max-width: 600px; margin: auto;">
+              <h2 style="color: #ea580c; border-bottom: 2px solid #ffedd5; padding-bottom: 10px;">Welcome to the Team!</h2>
+              <p>Hi <strong>{{candidateName}}</strong>,</p>
+              <p>We are so excited to have you join <strong>{{companyName}}</strong> on <strong>{{joiningDate}}</strong> as our new <strong>{{jobRole}}</strong>!</p>
+              <p>Here is what to expect on your first day:</p>
+              <ul>
+                <li><strong>9:30 AM:</strong> Virtual orientation & IT hardware setup</li>
+                <li><strong>11:00 AM:</strong> Welcome call with the {{department}} team</li>
+                <li><strong>2:00 PM:</strong> 1-on-1 with your mentor and hiring lead</li>
+              </ul>
+              <br/>
+              <p>Cheers,</p>
+              <p><strong>{{hrName}}</strong><br/>{{companyName}}</p>
+            </div>
+          `,
+          variables: ['candidateName', 'jobRole', 'department', 'companyName', 'joiningDate', 'hrName'],
         },
         {
           name: 'Respectful Candidate Rejection / Talent Pool',
@@ -190,6 +239,48 @@ export async function seedInitialData() {
           variables: ['candidateName', 'candidateEmail', 'candidatePhone', 'candidateId', 'companyName', 'companyAddress', 'jobRole', 'department', 'location', 'salary', 'joiningDate', 'currentDate', 'hrName'],
         },
         {
+          name: 'Proprietary Information & NDA Contract',
+          type: 'nda',
+          description: 'Legal non-disclosure agreement protecting confidential company information and IP.',
+          orientation: 'portrait',
+          htmlTemplate: `
+            <div class="header">
+              <div>
+                <div class="logo-text">{{companyName}} LEGAL</div>
+                <div style="font-size: 11px; color: #6b7280; margin-top: 4px;">{{companyAddress}}</div>
+              </div>
+              <div class="meta-info">
+                <div><strong>Doc ID:</strong> NDA-{{candidateId}}</div>
+                <div><strong>Effective:</strong> {{currentDate}}</div>
+              </div>
+            </div>
+
+            <div class="doc-title">NON-DISCLOSURE &amp; CONFIDENTIALITY AGREEMENT</div>
+
+            <div class="content">
+              <p>This Non-Disclosure Agreement is entered into between <strong>{{companyName}}</strong> and <strong>{{candidateName}}</strong> (Recipient).</p>
+              
+              <p style="margin: 15px 0;"><strong>1. Confidential Information:</strong> Recipient agrees to protect all proprietary code, systems, trade secrets, candidate records, and technical architectures belonging to {{companyName}}.</p>
+
+              <p style="margin: 15px 0;"><strong>2. Term &amp; Survival:</strong> Obligations under this Agreement continue indefinitely for trade secrets and for five (5) years following termination of employment.</p>
+
+              <p style="margin: 15px 0;"><strong>3. Governing Law:</strong> This agreement is governed by the laws of the State of California.</p>
+            </div>
+
+            <div class="signatures" style="margin-top: 40px;">
+              <div class="sig-box">
+                <p><strong>{{companyName}}</strong></p>
+                <p style="color: #6b7280;">By: {{hrName}}</p>
+              </div>
+              <div class="sig-box" style="text-align: right;">
+                <p><strong>{{candidateName}}</strong></p>
+                <p style="color: #6b7280;">Signature: ________________</p>
+              </div>
+            </div>
+          `,
+          variables: ['candidateName', 'candidateId', 'companyName', 'companyAddress', 'hrName', 'currentDate'],
+        },
+        {
           name: 'Certificate of Internship Excellence',
           type: 'internship_certificate',
           description: 'Landscape verification certificate for completing internship programs.',
@@ -226,84 +317,6 @@ export async function seedInitialData() {
         }
       ]);
       logger.info('Default Document Templates seeded.');
-    }
-
-    // 4. Seed Sample Candidates
-    const candidateCount = await Candidate.countDocuments();
-    if (candidateCount === 0) {
-      await Candidate.insertMany([
-        {
-          candidateId: 'HF-1001',
-          fullName: 'Inbavarunan Kumar',
-          email: 'inba.developer@gmail.com',
-          phone: '+1 (555) 349-8812',
-          jobRole: 'Lead Full Stack Architect',
-          department: 'Core Platform',
-          company: 'HireFlow Technologies Inc.',
-          location: 'San Francisco, CA (Hybrid)',
-          salary: '$165,000 / year',
-          joiningDate: 'September 1, 2026',
-          status: 'Selected',
-          notes: 'Top tier candidate with deep expertise in asynchronous distributed systems.',
-        },
-        {
-          candidateId: 'HF-1002',
-          fullName: 'Sophia Chen',
-          email: 'sophia.chen@example.com',
-          phone: '+1 (555) 782-9014',
-          jobRole: 'Senior Backend Engineer',
-          department: 'Infrastructure',
-          company: 'HireFlow Technologies Inc.',
-          location: 'Seattle, WA (Remote)',
-          salary: '$145,000 / year',
-          joiningDate: 'October 15, 2026',
-          status: 'Shortlisted',
-          notes: 'Strong in Redis queues and high concurrency distributed workers.',
-        },
-        {
-          candidateId: 'HF-1003',
-          fullName: 'Marcus Vance',
-          email: 'marcus.vance@example.com',
-          phone: '+1 (555) 902-3341',
-          jobRole: 'Product UX Designer',
-          department: 'Design Systems',
-          company: 'HireFlow Technologies Inc.',
-          location: 'New York, NY',
-          salary: '$120,000 / year',
-          joiningDate: 'September 15, 2026',
-          status: 'Interview',
-          notes: 'Portfolio includes high-fidelity dark glassmorphic SaaS tools.',
-        },
-        {
-          candidateId: 'HF-1004',
-          fullName: 'Elena Rostova',
-          email: 'elena.rostova@example.com',
-          phone: '+1 (555) 601-4490',
-          jobRole: 'DevOps Security Specialist',
-          department: 'Security & Compliance',
-          company: 'HireFlow Technologies Inc.',
-          location: 'Austin, TX (Remote)',
-          salary: '$150,000 / year',
-          joiningDate: 'August 25, 2026',
-          status: 'Applied',
-          notes: 'OWASP Top 10 auditor with SOC2 automation background.',
-        },
-        {
-          candidateId: 'HF-1005',
-          fullName: 'Aarav Patel',
-          email: 'aarav.patel@example.com',
-          phone: '+1 (555) 219-8732',
-          jobRole: 'Frontend Engineering Intern',
-          department: 'Product Growth',
-          company: 'HireFlow Technologies Inc.',
-          location: 'Remote',
-          salary: '$60,000 / year',
-          joiningDate: 'June 1, 2026',
-          status: 'Selected',
-          notes: 'Winner of 2026 University Web Engineering Hackathon.',
-        }
-      ]);
-      logger.info('Default Sample Candidates seeded.');
     }
   } catch (err) {
     logger.warn(`Initial seed warning: ${err.message}`);
