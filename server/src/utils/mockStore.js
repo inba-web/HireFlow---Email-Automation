@@ -4,7 +4,7 @@ export const mockStore = {
     {
       _id: 'cand_1001',
       candidateId: 'HF-1001',
-      fullName: 'Inbavarunan Kumar',
+      fullName: 'Inbavarunan',
       email: 'inbafreakz@gmail.com',
       phone: '+1 (555) 349-8812',
       jobRole: 'Lead Full Stack Architect',
