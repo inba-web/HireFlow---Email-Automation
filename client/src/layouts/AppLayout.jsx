@@ -21,7 +21,6 @@ export function AppLayout({ children }) {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span className="font-semibold text-white">HireFlow</span>
-            <span>— Enterprise Recruitment Email &amp; Document Automation</span>
           </div>
           <div>© 2026 HireFlow Technologies Inc. All rights reserved.</div>
         </div>
