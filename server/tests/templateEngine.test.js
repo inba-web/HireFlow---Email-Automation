@@ -22,11 +22,11 @@ describe('Template Engine Unit Tests', () => {
   });
 
   it('should sanitize unsafe script tags from HTML email content', () => {
-    const dirty = '<p>Offer Letter</p><script>alert("xss")</script><a href="https://hireflow.dev">Sign</a>';
+    const dirty = '<p>Offer Letter</p><script>alert("xss")</script><a href="https://thodar.dev">Sign</a>';
     const clean = sanitizeEmailHtml(dirty);
     assert.ok(!clean.includes('<script>'));
     assert.ok(clean.includes('<p>Offer Letter</p>'));
-    assert.ok(clean.includes('href="https://hireflow.dev"'));
+    assert.ok(clean.includes('href="https://thodar.dev"'));
   });
 
   it('should build rich candidate context dictionary', () => {
@@ -38,12 +38,12 @@ describe('Template Engine Unit Tests', () => {
       joiningDate: 'October 1',
     };
     const settings = {
-      companyName: 'HireFlow Tech',
+      companyName: 'Thodar Tech',
       hrName: 'Sarah Jenkins',
     };
     const context = buildTemplateContext(candidate, settings);
     assert.equal(context.candidateName, 'Sophia Chen');
-    assert.equal(context.companyName, 'HireFlow Tech');
+    assert.equal(context.companyName, 'Thodar Tech');
     assert.equal(context.hrName, 'Sarah Jenkins');
     assert.equal(context.salary, '$150,000');
   });
@@ -68,12 +68,12 @@ Missing Name,,Frontend,UI,$90,000`;
   it('should export candidates into properly formatted CSV string', () => {
     const candidates = [
       {
-        candidateId: 'HF-1001',
+        candidateId: 'TD-1001',
         fullName: 'Marcus Vance',
         email: 'marcus@example.com',
         jobRole: 'UX Designer',
         department: 'Design',
-        company: 'HireFlow',
+        company: 'Thodar',
         location: 'NY',
         salary: '$120,000',
         status: 'Selected',

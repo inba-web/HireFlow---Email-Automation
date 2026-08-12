@@ -63,7 +63,7 @@ export async function processEmailJob({ campaignId, candidateId, idempotencyKey 
     campaign = mockStore.campaigns.find((c) => c._id === campaignId);
     candidate = mockStore.candidates.find((c) => c._id === candidateId || c.candidateId === candidateId);
     settings = {
-      companyName: 'HireFlow Technologies Inc.',
+      companyName: 'Thodar Technologies Inc.',
       companyEmail: 'inbafreakz@gmail.com',
       hrName: 'Sarah Jenkins (Director of Talent Acquisition)',
       companyAddress: '500 Howard Street, San Francisco, CA',

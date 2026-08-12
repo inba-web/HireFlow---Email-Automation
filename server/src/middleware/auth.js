@@ -40,8 +40,8 @@ export async function requireAuth(req, res, next) {
         // Auto-sync application user
         appUser = await User.create({
           clerkUserId,
-          email: req.headers['x-user-email'] || 'hr.admin@hireflow.dev',
-          name: req.headers['x-user-name'] || 'HireFlow Admin',
+          email: req.headers['x-user-email'] || 'hr.admin@thodar.dev',
+          name: req.headers['x-user-name'] || 'Thodar Admin',
           role: 'Admin',
           status: 'Active',
         });
@@ -50,8 +50,8 @@ export async function requireAuth(req, res, next) {
       // Memory fallback user
       appUser = {
         clerkUserId,
-        email: 'hr.admin@hireflow.dev',
-        name: 'HireFlow Admin',
+        email: 'hr.admin@thodar.dev',
+        name: 'Thodar Admin',
         role: 'Admin',
         status: 'Active',
       };

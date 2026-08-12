@@ -89,7 +89,7 @@ export default function Navbar() {
       >
         {/* Brand Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0">
-          <img src="/assets/logo.svg" alt="HireFlow Logo" className="h-8.5 w-auto" width={170} height={40} />
+          <img src="/assets/logo.svg" alt="Thodar Logo" className="h-8.5 w-auto" width={170} height={40} />
         </Link>
 
         {/* Center Navigation Links */}
@@ -192,7 +192,7 @@ export default function Navbar() {
         }`}
       >
         <Link to="/" onClick={() => setIsOpen(false)} className="mb-2">
-          <img src="/assets/logo.svg" alt="HireFlow" className="h-9 w-auto" width={170} height={40} />
+          <img src="/assets/logo.svg" alt="Thodar" className="h-9 w-auto" width={170} height={40} />
         </Link>
 
         <div className="flex flex-col items-center gap-3 w-full max-w-xs px-4 max-h-[55vh] overflow-y-auto custom-scrollbar">

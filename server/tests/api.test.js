@@ -40,7 +40,7 @@ describe('API Route Integration Tests', () => {
     const res = await fetch(`${baseUrl}/auth/me`, {
       headers: {
         'x-clerk-user-id': 'test_user_999',
-        'x-user-email': 'admin@hireflow.dev',
+        'x-user-email': 'admin@thodar.dev',
         'x-user-name': 'Test Admin',
       }
     });

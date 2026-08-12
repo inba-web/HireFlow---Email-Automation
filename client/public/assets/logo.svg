@@ -1,59 +1,46 @@
 <svg width="180" height="42" viewBox="0 0 180 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Fortune 500 Inspired Dynamic Infinity Flow Emblem -->
+  <!-- Google-inspired Multi-colored Infinity Loop Emblem & Amazon Smile Arrow -->
   <g filter="url(#glow)">
-    <!-- Loop Strand 1 (Left H-stem & loop transition) -->
-    <path d="M7 11C7 7.68629 9.68629 5 13 5C16.3137 5 19 7.68629 19 11V31C19 34.3137 16.3137 37 13 37C9.68629 37 7 34.3137 7 31V11Z" fill="url(#grad_left)" />
+    <!-- Infinity Ribbon -->
+    <path d="M 8,21 C 8,14 13,9 18,9 C 23,9 24,14 24,21 C 24,28 25,33 30,33 C 35,33 40,28 40,21 C 40,14 35,9 30,9 C 25,9 24,14 24,21 C 24,28 23,33 18,33 C 13,33 8,28 8,21 Z" 
+          stroke="url(#google_colors)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
     
-    <!-- Flow Connector Ribbon (Intertwined Bridge) -->
-    <path d="M14 17C18 17 22 21 26 25C30 29 34 31 38 29C42 27 44 22 43 17C42 12 37 9 32 10C27 11 23 15 19 19" stroke="url(#grad_flow)" stroke-width="4.5" stroke-linecap="round" />
-
-    <!-- Loop Strand 2 (Right Flow Loop & dynamic arrow apex) -->
-    <path d="M31 11C31 7.68629 33.6863 5 37 5C40.3137 5 43 7.68629 43 11V31C43 34.3137 40.3137 37 37 37C33.6863 37 31 34.3137 31 31V11Z" fill="url(#grad_right)" />
-
-    <!-- Pulse Energy Spark Core -->
-    <circle cx="26" cy="21" r="2.5" fill="#FFFFFF" />
+    <!-- Pulse Spark Core -->
+    <circle cx="24" cy="21" r="2" fill="#FFFFFF" />
   </g>
 
-  <!-- Typography Wordmark: HireFlow -->
-  <text x="54" y="27" font-family="'Poppins', system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.6">
-    <tspan fill="#FFFFFF">Hire</tspan><tspan fill="url(#grad_text)" font-weight="800">Flow</tspan>
+  <!-- Amazon-inspired Smile Arrow -->
+  <g>
+    <path d="M 24,35 Q 70,44 116,33" stroke="#FF9900" stroke-width="2" stroke-linecap="round" fill="none" />
+    <path d="M 112,35 L 118,32 L 115,26 Z" fill="#FF9900" />
+  </g>
+
+  <!-- Typography Wordmark: Thodar -->
+  <text x="48" y="27" font-family="'Poppins', system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.6">
+    <tspan fill="#FFFFFF">Tho</tspan><tspan fill="url(#text_grad)" font-weight="800">dar</tspan>
   </text>
 
   <!-- Subtitle Tagline Dot -->
-  <circle cx="152" cy="25" r="2" fill="#F26A06" />
+  <circle cx="125" cy="25" r="2" fill="#FF9900" />
 
   <defs>
-    <!-- Left Gradient: Orange to Fuchsia -->
-    <linearGradient id="grad_left" x1="7" y1="5" x2="19" y2="37" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#F26A06" />
-      <stop offset="1" stop-color="#D10A8A" />
+    <!-- Google Colors Rainbow Gradient -->
+    <linearGradient id="google_colors" x1="8" y1="9" x2="40" y2="33" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4285F4" />
+      <stop offset="35%" stop-color="#EA4335" />
+      <stop offset="70%" stop-color="#FBBC05" />
+      <stop offset="100%" stop-color="#34A853" />
     </linearGradient>
 
-    <!-- Flow Ribbon Gradient: Magenta to Electric Violet to Cyan -->
-    <linearGradient id="grad_flow" x1="14" y1="10" x2="43" y2="31" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#D10A8A" />
-      <stop offset="0.5" stop-color="#8504B5" />
-      <stop offset="0.85" stop-color="#2E08CF" />
-      <stop offset="1" stop-color="#00D2FF" />
+    <!-- Text Flow Gradient: Deep Electric Blue to Cyan -->
+    <linearGradient id="text_grad" x1="85" y1="12" x2="120" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4285F4" />
+      <stop offset="100%" stop-color="#00D2FF" />
     </linearGradient>
 
-    <!-- Right Gradient: Violet to Deep Electric Blue -->
-    <linearGradient id="grad_right" x1="31" y1="5" x2="43" y2="37" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#8504B5" />
-      <stop offset="0.6" stop-color="#2E08CF" />
-      <stop offset="1" stop-color="#00D2FF" />
-    </linearGradient>
-
-    <!-- Text Flow Gradient -->
-    <linearGradient id="grad_text" x1="98" y1="12" x2="152" y2="28" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#F26A06" />
-      <stop offset="0.45" stop-color="#D10A8A" />
-      <stop offset="1" stop-color="#8504B5" />
-    </linearGradient>
-
-    <!-- Subtle Glow Filter -->
-    <filter id="glow" x="3" y="1" width="44" height="40" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#D10A8A" flood-opacity="0.3" />
+    <!-- Subtle Premium Glow -->
+    <filter id="glow" x="3" y="4" width="45" height="34" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#4285F4" flood-opacity="0.3" />
     </filter>
   </defs>
 </svg>

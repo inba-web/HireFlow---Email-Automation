@@ -37,7 +37,7 @@ const candidateSchema = new mongoose.Schema({
   },
   company: {
     type: String,
-    default: 'HireFlow Technologies',
+    default: 'Thodar Technologies',
     trim: true,
   },
   location: {

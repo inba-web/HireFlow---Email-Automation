@@ -12,7 +12,7 @@ const auditLogSchema = new mongoose.Schema({
   },
   userEmail: {
     type: String,
-    default: 'system@hireflow.dev',
+    default: 'system@thodar.dev',
   },
   action: {
     type: String,

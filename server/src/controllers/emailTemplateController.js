@@ -245,13 +245,13 @@ export async function previewEmailTemplate(req, res, next) {
         salary: '$165,000 / year',
         location: 'San Francisco, CA',
         joiningDate: 'September 1, 2026',
-        candidateId: 'HF-PREVIEW',
+        candidateId: 'TD-PREVIEW',
       };
     }
 
     const settings = (isDBConnected() && (await SystemSettings.findOne())) || {
-      companyName: 'HireFlow Technologies Inc.',
-      companyEmail: 'talent@hireflow.dev',
+      companyName: 'Thodar Technologies Inc.',
+      companyEmail: 'talent@thodar.dev',
       hrName: 'Sarah Jenkins',
     };
     const context = buildTemplateContext(candidate, settings);
@@ -289,12 +289,12 @@ export async function sendTestEmail(req, res, next) {
       salary: '$120,000 / year',
       joiningDate: 'Next Monday',
       location: 'San Francisco, CA',
-      candidateId: 'HF-TEST',
+      candidateId: 'TD-TEST',
     };
 
     const settings = (isDBConnected() && (await SystemSettings.findOne())) || {
-      companyName: 'HireFlow Technologies Inc.',
-      companyEmail: 'talent@hireflow.dev',
+      companyName: 'Thodar Technologies Inc.',
+      companyEmail: 'talent@thodar.dev',
       hrName: 'Sarah Jenkins',
     };
     const context = buildTemplateContext(mockCandidate, settings);

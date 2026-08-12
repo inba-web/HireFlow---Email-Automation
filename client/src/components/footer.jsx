@@ -42,7 +42,7 @@ export default function Footer() {
             <hr className="w-full border-white/20 mt-6" />
             <div className="flex flex-col md:flex-row items-center w-full justify-between gap-4 py-4">
                 <p>Build Ai agents for free</p>
-                <p>Copyright © 2026 HireFlow. All rights reservered.</p>
+                <p>Copyright © 2026 Thodar. All rights reserved.</p>
             </div>
         </motion.footer>
     );

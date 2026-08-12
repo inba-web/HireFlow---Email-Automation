@@ -14,7 +14,7 @@ export const logger = winston.createLogger({
     errors({ stack: true }),
     process.env.NODE_ENV === 'production' ? winston.format.json() : combine(colorize(), customFormat)
   ),
-  defaultMeta: { service: 'hireflow-server' },
+  defaultMeta: { service: 'thodar-server' },
   transports: [
     new winston.transports.Console()
   ]

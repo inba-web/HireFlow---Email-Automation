@@ -243,7 +243,7 @@ export function LandingPage() {
             <div className="pt-2">
               <Link to={isSignedIn ? "/dashboard" : "/sign-up"}>
                 <GlassButton size="lg" variant="gradient" icon={ArrowRightIcon}>
-                  {isSignedIn ? "Open HireFlow Dashboard" : "Get Started with HireFlow"}
+                  {isSignedIn ? "Open Thodar Dashboard" : "Get Started with Thodar"}
                 </GlassButton>
               </Link>
             </div>

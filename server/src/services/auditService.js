@@ -5,7 +5,7 @@ import { isDBConnected } from '../config/db.js';
 export async function recordAudit({
   clerkUserId = 'system',
   userName = 'System User',
-  userEmail = 'system@hireflow.dev',
+  userEmail = 'system@thodar.dev',
   action,
   resourceType,
   resourceId = '',

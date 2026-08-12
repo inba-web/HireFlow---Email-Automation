@@ -13,13 +13,13 @@ export async function seedInitialData() {
     const settingsCount = await SystemSettings.countDocuments();
     if (settingsCount === 0) {
       await SystemSettings.create({
-        companyName: 'HireFlow Technologies Inc.',
-        companyEmail: 'talent@hireflow.dev',
+        companyName: 'Thodar Technologies Inc.',
+        companyEmail: 'talent@thodar.dev',
         companyAddress: '500 Howard Street, Suite 300, San Francisco, CA 94105',
-        companyWebsite: 'https://hireflow.dev',
+        companyWebsite: 'https://thodar.dev',
         hrName: 'Sarah Jenkins (Director of Talent Acquisition)',
         hrContact: '+1 (415) 890-1234',
-        defaultSmtpFrom: '"HireFlow Talent" <talent@hireflow.dev>',
+        defaultSmtpFrom: '"Thodar Talent" <talent@thodar.dev>',
       });
       logger.info('Default SystemSettings seeded.');
     }
@@ -232,7 +232,7 @@ export async function seedInitialData() {
             </div>
 
             <div class="footer">
-              <span>HireFlow Secure Document ID: {{candidateId}}</span>
+              <span>Thodar Secure Document ID: {{candidateId}}</span>
               <span>Generated on {{currentDate}}</span>
             </div>
           `,
@@ -308,7 +308,7 @@ export async function seedInitialData() {
                   <strong>{{hrName}}</strong><br/><span style="color: #6b7280;">Director of Human Resources</span>
                 </div>
                 <div style="border-top: 1px solid #111827; width: 220px; padding-top: 8px; font-size: 13px;">
-                  <strong>Verified Official Seal</strong><br/><span style="color: #6b7280;">HireFlow Credentials #{{candidateId}}</span>
+                  <strong>Verified Official Seal</strong><br/><span style="color: #6b7280;">Thodar Credentials #{{candidateId}}</span>
                 </div>
               </div>
             </div>

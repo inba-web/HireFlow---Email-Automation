@@ -32,7 +32,7 @@ export async function parseAndImportCandidates(csvContent, createdBy = 'HR Team'
     const email = (row.email || row.candidateemail || '').toLowerCase().trim();
     const jobRole = row.jobrole || row.role || row.position || 'Software Engineer';
     const department = row.department || row.dept || 'Engineering';
-    const company = row.company || row.organization || 'HireFlow Technologies';
+    const company = row.company || row.organization || 'Thodar Technologies';
     const location = row.location || row.city || 'Remote';
     const salary = row.salary || row.ctc || '$90,000 / year';
     const phone = row.phone || row.mobile || row.contact || '';
@@ -73,7 +73,7 @@ export async function parseAndImportCandidates(csvContent, createdBy = 'HR Team'
       }
     }
 
-    const candidateId = `HF-${Date.now().toString().slice(-4)}${Math.floor(10 + Math.random() * 90)}`;
+    const candidateId = `TD-${Date.now().toString().slice(-4)}${Math.floor(10 + Math.random() * 90)}`;
 
     validCandidates.push({
       candidateId,

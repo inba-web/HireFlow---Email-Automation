@@ -3,11 +3,11 @@ import mongoose from 'mongoose';
 const systemSettingsSchema = new mongoose.Schema({
   companyName: {
     type: String,
-    default: 'HireFlow Technologies Inc.',
+    default: 'Thodar Technologies Inc.',
   },
   companyEmail: {
     type: String,
-    default: 'recruitment@hireflow.dev',
+    default: 'recruitment@thodar.dev',
   },
   companyAddress: {
     type: String,
@@ -15,7 +15,7 @@ const systemSettingsSchema = new mongoose.Schema({
   },
   companyWebsite: {
     type: String,
-    default: 'https://hireflow.dev',
+    default: 'https://thodar.dev',
   },
   hrName: {
     type: String,
@@ -27,7 +27,7 @@ const systemSettingsSchema = new mongoose.Schema({
   },
   defaultSmtpFrom: {
     type: String,
-    default: '"HireFlow Recruiting" <recruitment@hireflow.dev>',
+    default: '"Thodar Recruiting" <recruitment@thodar.dev>',
   },
   rateLimitPerMinute: {
     type: Number,

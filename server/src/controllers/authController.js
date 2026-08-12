@@ -55,8 +55,8 @@ export async function syncUser(req, res, next) {
     } else {
       user = {
         clerkUserId,
-        email: email || 'hr.admin@hireflow.dev',
-        name: name || 'HireFlow User',
+        email: email || 'hr.admin@thodar.dev',
+        name: name || 'Thodar User',
         role: role || 'Admin',
         status: 'Active',
       };

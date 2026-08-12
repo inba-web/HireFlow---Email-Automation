@@ -121,10 +121,10 @@ export function buildTemplateContext(candidate = {}, settings = {}) {
       ? new Date(candidate.applicationDate).toLocaleDateString()
       : currentDate,
     currentDate,
-    companyName: settings.companyName || candidate.company || 'HireFlow Technologies Inc.',
-    companyEmail: settings.companyEmail || 'recruitment@hireflow.dev',
+    companyName: settings.companyName || candidate.company || 'Thodar Technologies Inc.',
+    companyEmail: settings.companyEmail || 'recruitment@thodar.dev',
     companyAddress: settings.companyAddress || '100 Silicon Valley Way, San Francisco, CA',
-    companyWebsite: settings.companyWebsite || 'https://hireflow.dev',
+    companyWebsite: settings.companyWebsite || 'https://thodar.dev',
     hrName: settings.hrName || 'Talent Acquisition Team',
     hrContact: settings.hrContact || '+1 (555) 019-2834',
     ...(candidate.metadata ? Object.fromEntries(candidate.metadata) : {}),

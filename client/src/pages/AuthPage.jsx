@@ -18,7 +18,7 @@ export function AuthPage({ mode = 'sign-in' }) {
 
       <div className="mb-6 flex flex-col items-center gap-2">
         <Link to="/" className="flex items-center gap-2.5">
-          <img src="/assets/logo.svg" alt="HireFlow" className="h-10 w-auto" width={180} height={42} />
+          <img src="/assets/logo.svg" alt="Thodar" className="h-10 w-auto" width={180} height={42} />
         </Link>
         <p className="text-xs text-gray-400">Enterprise Recruitment Email &amp; Document Automation</p>
       </div>

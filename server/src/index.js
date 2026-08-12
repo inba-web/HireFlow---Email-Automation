@@ -25,8 +25,8 @@ app.use(
 // 2. CORS configuration
 const allowedOrigins = [
   config.CLIENT_URL,
-  'https://hire-flow-email-automation.vercel.app',
-  'https://hireflow-email-automation.vercel.app',
+  'https://thodar-email-automation.vercel.app',
+  'https://thodaremail-automation.vercel.app',
   'http://localhost:5173',
   'http://localhost:3000',
   'http://127.0.0.1:5173',
@@ -96,7 +96,7 @@ async function startServer() {
   initQueueWorker();
 
   const server = app.listen(config.PORT, () => {
-    logger.info(`HireFlow API Server running on port ${config.PORT} [${config.NODE_ENV}]`);
+    logger.info(`Thodar API Server running on port ${config.PORT} [${config.NODE_ENV}]`);
     logger.info(`Ready to serve client requests at ${config.CLIENT_URL}`);
   });
 

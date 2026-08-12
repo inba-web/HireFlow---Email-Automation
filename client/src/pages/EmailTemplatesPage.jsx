@@ -420,7 +420,7 @@ export function EmailTemplatesPage() {
                     .replace(/\{\{jobRole\}\}/g, 'Principal Architect')
                     .replace(/\{\{salary\}\}/g, '$180,000 / year')
                     .replace(/\{\{joiningDate\}\}/g, 'September 15, 2026')
-                    .replace(/\{\{companyName\}\}/g, 'HireFlow Technologies Inc.')
+                    .replace(/\{\{companyName\}\}/g, 'Thodar Technologies Inc.')
                     .replace(/\{\{department\}\}/g, 'Core Architecture')
                     .replace(/\{\{hrName\}\}/g, 'Sarah Jenkins'),
                 }}

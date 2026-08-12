@@ -21,13 +21,13 @@ export function SettingsPage() {
   const [saving, setSaving] = useState(false);
 
   const [formData, setFormData] = useState({
-    companyName: 'HireFlow Technologies Inc.',
-    companyEmail: 'talent@hireflow.dev',
+    companyName: 'Thodar Technologies Inc.',
+    companyEmail: 'talent@thodar.dev',
     companyAddress: '500 Howard Street, Suite 300, San Francisco, CA 94105',
-    companyWebsite: 'https://hireflow.dev',
+    companyWebsite: 'https://thodar.dev',
     hrName: 'Sarah Jenkins (Director of Talent Acquisition)',
     hrContact: '+1 (415) 890-1234',
-    defaultSmtpFrom: '"HireFlow Talent" <talent@hireflow.dev>',
+    defaultSmtpFrom: '"Thodar Talent" <talent@thodar.dev>',
     rateLimitPerMinute: 60,
   });
 

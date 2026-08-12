@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡ HireFlow
+# ⚡ Thodar
 ### Enterprise Recruitment Email & Document Automation Platform
 
 An end-to-end recruitment outreach engine designed for modern Talent Acquisition teams. Automate candidate communication, generate dynamic PDF offer contracts, and dispatch high-throughput email campaigns with real-time delivery telemetry.
@@ -22,10 +22,10 @@ An end-to-end recruitment outreach engine designed for modern Talent Acquisition
 ## 📸 Product Previews
 
 ### 🌐 Landing Page
-![HireFlow Landing Page](docs/assets/landing-page.png)
+![Thodar Landing Page](docs/assets/landing-page.png)
 
 ### 📊 Recruitment Automation Dashboard
-![HireFlow Dashboard](docs/assets/dashboard.png)
+![Thodar Dashboard](docs/assets/dashboard.png)
 
 ---
 
@@ -99,8 +99,8 @@ An end-to-end recruitment outreach engine designed for modern Talent Acquisition
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/HireFlow---Email-Automation.git
-cd HireFlow---Email-Automation
+git clone https://github.com/your-username/Thodar---Email-Automation.git
+cd Thodar---Email-Automation
 ```
 
 ### 2. Configure Backend Environment
@@ -117,7 +117,7 @@ NODE_ENV=development
 CLIENT_URL=http://localhost:5173
 
 # MongoDB Atlas
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/hireflow?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/thodar?retryWrites=true&w=majority
 
 # Upstash Redis
 REDIS_URL=rediss://default:<password>@<your-upstash-host>.upstash.io:6379
@@ -132,7 +132,7 @@ SMTP_PORT=587
 SMTP_SECURE=false
 SMTP_USER=your_email@gmail.com
 SMTP_PASSWORD=your_gmail_app_password
-SMTP_FROM="HireFlow" <your_email@gmail.com>
+SMTP_FROM="Thodar" <your_email@gmail.com>
 ```
 
 ### 3. Configure Frontend Environment

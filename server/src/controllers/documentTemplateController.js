@@ -203,7 +203,7 @@ export async function renderTestPdf(req, res, next) {
     if (!candidate) {
       candidate = {
         _id: 'cand_preview',
-        candidateId: 'HF-1001',
+        candidateId: 'TD-1001',
         fullName: 'Alexander Vance',
         email: 'alex.vance@example.com',
         phone: '+1 (555) 349-8812',
@@ -212,13 +212,13 @@ export async function renderTestPdf(req, res, next) {
         salary: '$180,000 / year',
         location: 'San Francisco, CA',
         joiningDate: 'October 15, 2026',
-        company: 'HireFlow Technologies Inc.',
+        company: 'Thodar Technologies Inc.',
       };
     }
 
     const settings = (isDBConnected() && (await SystemSettings.findOne())) || {
-      companyName: 'HireFlow Technologies Inc.',
-      companyEmail: 'talent@hireflow.dev',
+      companyName: 'Thodar Technologies Inc.',
+      companyEmail: 'talent@thodar.dev',
       hrName: 'Sarah Jenkins',
     };
     const context = buildTemplateContext(candidate, settings);
