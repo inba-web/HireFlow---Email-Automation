@@ -86,15 +86,7 @@ export function LandingPage() {
       <main className="px-4 md:px-12 max-w-7xl mx-auto space-y-36 pt-12 pb-24">
         {/* Hero Section */}
         <section className="flex flex-col items-center text-center mt-16">
-          <motion.div
-            className="flex items-center gap-2.5 glass px-4 py-1.5 rounded-full text-xs font-medium text-gray-200 shadow-xl"
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.1, duration: 0.4 }}
-          >
-            <SparklesIcon className="size-3.5 text-amber-400" />
-            <span>Enterprise Recruitment Email & Document Automation</span>
-          </motion.div>
+
 
           <motion.h1
             className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight max-w-4xl mt-6 leading-[1.15] text-white"
