@@ -1,4 +1,3 @@
-import React from 'react';
 import { SignIn, SignUp } from '@clerk/clerk-react';
 import { Link } from 'react-router-dom';
 import { ArrowLeftIcon } from 'lucide-react';
