@@ -39,7 +39,7 @@ export default function Navbar() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -93,7 +93,7 @@ export default function Navbar() {
         </Link>
 
         {/* Center Navigation Links */}
-        <div className="hidden xl:flex items-center space-x-6 text-sm font-medium">
+        <div className="hidden lg:flex items-center space-x-6 text-sm font-medium">
           {navLinks.map((link) => {
             const isHash = link.href.startsWith('#');
             const isActive =
@@ -179,7 +179,7 @@ export default function Navbar() {
         {/* Mobile Menu Trigger */}
         <button
           onClick={() => setIsOpen(true)}
-          className="p-2 rounded-xl glass transition active:scale-90 xl:hidden cursor-pointer"
+          className="p-2 rounded-xl glass transition active:scale-90 lg:hidden cursor-pointer"
         >
           <MenuIcon className="size-6 text-gray-200" />
         </button>
@@ -187,7 +187,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       <div
-        className={`fixed inset-0 z-50 flex flex-col items-center justify-center gap-5 bg-black/95 text-lg font-medium backdrop-blur-2xl transition duration-300 xl:hidden ${
+        className={`fixed inset-0 z-50 flex flex-col items-center justify-center gap-5 bg-black/95 text-lg font-medium backdrop-blur-2xl transition duration-300 lg:hidden ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

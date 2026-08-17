@@ -21,11 +21,13 @@ api.interceptors.request.use(async (config) => {
   try {
     if (getClerkTokenFn) {
       // Add a 3.5s timeout race to prevent requests from hanging if Clerk network requests time out
+      let timeoutId;
       const tokenPromise = getClerkTokenFn();
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Clerk token retrieval timed out')), 3500)
-      );
+      const timeoutPromise = new Promise((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error('Clerk token retrieval timed out')), 3500);
+      });
       const token = await Promise.race([tokenPromise, timeoutPromise]);
+      clearTimeout(timeoutId);
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

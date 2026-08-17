@@ -12,6 +12,7 @@ import { GlassButton } from '../components/ui/GlassButton';
 import { GlassTable } from '../components/ui/GlassTable';
 import { GlassInput, GlassSelect } from '../components/ui/GlassInput';
 import { useToast } from '../context/ToastContext';
+import { useDebounce } from '../hooks/useDebounce';
 
 const ACTION_FILTERS = [
   { value: 'all', label: 'All Security Actions' },
@@ -32,6 +33,7 @@ export function AuditLogsPage() {
   const [pagination, setPagination] = useState({ page: 1, limit: 30, total: 0, pages: 1 });
 
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [actionFilter, setActionFilter] = useState('all');
 
   const fetchAuditLogs = useCallback(async (page = 1) => {
@@ -41,7 +43,7 @@ export function AuditLogsPage() {
         params: {
           page,
           limit: pagination.limit,
-          search,
+          search: debouncedSearch,
           action: actionFilter,
         },
       });
@@ -54,7 +56,7 @@ export function AuditLogsPage() {
     } finally {
       setLoading(false);
     }
-  }, [search, actionFilter, pagination.limit, error]);
+  }, [debouncedSearch, actionFilter, pagination.limit, error]);
 
   useEffect(() => {
     fetchAuditLogs(1);

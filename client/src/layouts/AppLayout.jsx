@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from '../components/navbar';
 import { AmbientBackground } from '../components/AmbientBackground';
 
 export function AppLayout({ children }) {
+
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-[#D10A8A] selection:text-white flex flex-col">
       {/* Dynamic Animated Ambient Background Glows */}

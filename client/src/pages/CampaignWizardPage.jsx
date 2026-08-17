@@ -36,6 +36,62 @@ const STEPS = [
   { id: 7, title: 'Confirmation & Launch', icon: CheckCircle2Icon },
 ];
 
+const CandidateWizardItem = React.memo(({ cand, isSelected, onToggle }) => {
+  const isOfferReady = ['Selected', 'Shortlisted', 'Offer Sent', 'Offer Accepted'].includes(cand.status);
+  const hasPdfDetails = Boolean(cand.salary && cand.joiningDate);
+
+  return (
+    <div
+      onClick={() => onToggle(cand._id)}
+      className={`p-3.5 rounded-xl glass border transition cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+        isSelected
+          ? 'bg-white/15 border-indigo-400/50 shadow-md shadow-indigo-500/10'
+          : 'border-white/10 hover:bg-white/5'
+      }`}
+    >
+      <div className="flex items-start sm:items-center gap-3 min-w-0">
+        <div
+          className={`size-4.5 rounded border flex items-center justify-center shrink-0 transition mt-0.5 sm:mt-0 ${
+            isSelected ? 'bg-indigo-500 border-indigo-400' : 'border-white/30'
+          }`}
+        >
+          {isSelected && <CheckCircle2Icon className="size-3.5 text-white" />}
+        </div>
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-semibold text-white text-sm truncate">{cand.fullName}</span>
+            {isOfferReady ? (
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/30 shrink-0">
+                📜 Offer Letter Candidate
+              </span>
+            ) : (
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shrink-0">
+                🎙️ Interview Stage
+              </span>
+            )}
+          </div>
+          <div className="text-xs text-gray-400 mt-0.5 truncate max-w-full">
+            {cand.email} • {cand.jobRole} ({cand.department})
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between sm:justify-end gap-2 pl-7 sm:pl-0 shrink-0">
+        {hasPdfDetails ? (
+          <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+            📄 PDF Supported
+          </span>
+        ) : (
+          <span className="px-2 py-0.5 rounded-full text-[10px] bg-white/5 text-gray-400 border border-white/10 shrink-0">
+            ✉️ Email Only
+          </span>
+        )}
+        <GlassBadge status={cand.status} />
+      </div>
+    </div>
+  );
+});
+
 export function CampaignWizardPage() {
   const navigate = useNavigate();
   const { success, error, warning } = useToast();
@@ -65,6 +121,12 @@ export function CampaignWizardPage() {
   const [previewCandidateIndex, setPreviewCandidateIndex] = useState(0);
   const [previewData, setPreviewData] = useState(null);
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
+
+  const handleToggleCandidate = useCallback((id) => {
+    setSelectedCandidateIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  }, []);
 
   useEffect(() => {
     async function loadResources() {
@@ -425,63 +487,13 @@ export function CampaignWizardPage() {
               <div className="max-h-72 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
                 {filteredCandidates.map((cand) => {
                   const isSelected = selectedCandidateIds.includes(cand._id);
-                  const isOfferReady = ['Selected', 'Shortlisted', 'Offer Sent'].includes(cand.status);
-                  const hasPdfDetails = Boolean(cand.salary && cand.joiningDate);
-
                   return (
-                    <div
+                    <CandidateWizardItem
                       key={cand._id}
-                      onClick={() => {
-                        setSelectedCandidateIds((prev) =>
-                          isSelected ? prev.filter((id) => id !== cand._id) : [...prev, cand._id]
-                        );
-                      }}
-                      className={`p-3.5 rounded-xl glass border transition cursor-pointer flex items-center justify-between ${
-                        isSelected
-                          ? 'bg-white/15 border-indigo-400/50 shadow-md shadow-indigo-500/10'
-                          : 'border-white/10 hover:bg-white/5'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`size-4.5 rounded border flex items-center justify-center transition ${
-                            isSelected ? 'bg-indigo-500 border-indigo-400' : 'border-white/30'
-                          }`}
-                        >
-                          {isSelected && <CheckCircle2Icon className="size-3.5 text-white" />}
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold text-white text-sm">{cand.fullName}</span>
-                            {isOfferReady ? (
-                              <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/30">
-                                📜 Offer Letter Candidate
-                              </span>
-                            ) : (
-                              <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                                🎙️ Interview Stage
-                              </span>
-                            )}
-                          </div>
-                          <div className="text-xs text-gray-400 mt-0.5">
-                            {cand.email} • {cand.jobRole} ({cand.department})
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        {hasPdfDetails ? (
-                          <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                            📄 PDF Supported
-                          </span>
-                        ) : (
-                          <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] bg-white/5 text-gray-400 border border-white/10">
-                            ✉️ Email Only
-                          </span>
-                        )}
-                        <GlassBadge status={cand.status} />
-                      </div>
-                    </div>
+                      cand={cand}
+                      isSelected={isSelected}
+                      onToggle={handleToggleCandidate}
+                    />
                   );
                 })}
               </div>

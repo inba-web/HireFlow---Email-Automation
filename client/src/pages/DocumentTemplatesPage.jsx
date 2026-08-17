@@ -56,6 +56,14 @@ export function DocumentTemplatesPage() {
   const [pdfBlobUrl, setPdfBlobUrl] = useState(null);
   const [isRenderingPdf, setIsRenderingPdf] = useState(false);
 
+  useEffect(() => {
+    return () => {
+      if (pdfBlobUrl) {
+        URL.revokeObjectURL(pdfBlobUrl);
+      }
+    };
+  }, [pdfBlobUrl]);
+
   const fetchTemplates = async () => {
     try {
       setLoading(true);
