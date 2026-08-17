@@ -17,6 +17,7 @@ import { GlassTable } from '../components/ui/GlassTable';
 import { GlassInput, GlassSelect } from '../components/ui/GlassInput';
 import { GlassModal } from '../components/ui/GlassModal';
 import { useToast } from '../context/ToastContext';
+import { useDebounce } from '../hooks/useDebounce';
 
 const STATUS_FILTERS = [
   { value: 'all', label: 'All Statuses' },
@@ -34,6 +35,7 @@ export function EmailLogsPage() {
   const [pagination, setPagination] = useState({ page: 1, limit: 25, total: 0, pages: 1 });
 
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedLog, setSelectedLog] = useState(null);
 
@@ -44,7 +46,7 @@ export function EmailLogsPage() {
         params: {
           page,
           limit: pagination.limit,
-          search,
+          search: debouncedSearch,
           status: statusFilter,
         },
       });
@@ -57,7 +59,7 @@ export function EmailLogsPage() {
     } finally {
       setLoading(false);
     }
-  }, [search, statusFilter, pagination.limit, error]);
+  }, [debouncedSearch, statusFilter, pagination.limit, error]);
 
   useEffect(() => {
     fetchLogs(1);

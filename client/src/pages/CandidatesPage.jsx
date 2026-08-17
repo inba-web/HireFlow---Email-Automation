@@ -24,6 +24,7 @@ import { GlassTable } from '../components/ui/GlassTable';
 import { GlassModal } from '../components/ui/GlassModal';
 import { GlassInput, GlassSelect, GlassTextarea } from '../components/ui/GlassInput';
 import { useToast } from '../context/ToastContext';
+import { useDebounce } from '../hooks/useDebounce';
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All Statuses' },
@@ -56,6 +57,7 @@ export function CandidatesPage() {
   const [pagination, setPagination] = useState({ page: 1, limit: 15, total: 0, pages: 1 });
 
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [statusFilter, setStatusFilter] = useState('all');
   const [deptFilter, setDeptFilter] = useState('all');
   const [selectedIds, setSelectedIds] = useState([]);
@@ -94,7 +96,7 @@ export function CandidatesPage() {
         params: {
           page,
           limit: pagination.limit,
-          search,
+          search: debouncedSearch,
           status: statusFilter,
           department: deptFilter,
         },
@@ -109,7 +111,7 @@ export function CandidatesPage() {
     } finally {
       setLoading(false);
     }
-  }, [search, statusFilter, deptFilter, pagination.limit, error]);
+  }, [debouncedSearch, statusFilter, deptFilter, pagination.limit, error]);
 
   useEffect(() => {
     fetchCandidates(1);

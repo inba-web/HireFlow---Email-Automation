@@ -18,6 +18,7 @@ import { GlassBadge } from '../components/ui/GlassBadge';
 import { GlassModal } from '../components/ui/GlassModal';
 import { GlassInput, GlassSelect, GlassTextarea } from '../components/ui/GlassInput';
 import { useToast } from '../context/ToastContext';
+import { useDebounce } from '../hooks/useDebounce';
 
 const CATEGORIES = [
   { value: 'all', label: 'All Categories' },
@@ -48,6 +49,7 @@ export function EmailTemplatesPage() {
   const [loading, setLoading] = useState(true);
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
 
   // Editor Modal
   const [isEditorOpen, setIsEditorOpen] = useState(false);
@@ -70,7 +72,7 @@ export function EmailTemplatesPage() {
     try {
       setLoading(true);
       const res = await api.get('/email-templates', {
-        params: { category: categoryFilter, search },
+        params: { category: categoryFilter, search: debouncedSearch },
       });
       if (res.success) {
         setTemplates(res.data);
@@ -84,7 +86,7 @@ export function EmailTemplatesPage() {
 
   useEffect(() => {
     fetchTemplates();
-  }, [categoryFilter, search]);
+  }, [categoryFilter, debouncedSearch]);
 
   const handleOpenCreate = () => {
     setActiveTemplate(null);

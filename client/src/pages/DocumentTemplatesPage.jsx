@@ -17,6 +17,7 @@ import { GlassBadge } from '../components/ui/GlassBadge';
 import { GlassModal } from '../components/ui/GlassModal';
 import { GlassInput, GlassSelect, GlassTextarea } from '../components/ui/GlassInput';
 import { useToast } from '../context/ToastContext';
+import { useDebounce } from '../hooks/useDebounce';
 
 const DOC_TYPES = [
   { value: 'all', label: 'All Document Types' },
@@ -36,6 +37,7 @@ export function DocumentTemplatesPage() {
   const [loading, setLoading] = useState(true);
   const [typeFilter, setTypeFilter] = useState('all');
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
 
   // Editor Modal
   const [isEditorOpen, setIsEditorOpen] = useState(false);
@@ -58,7 +60,7 @@ export function DocumentTemplatesPage() {
     try {
       setLoading(true);
       const res = await api.get('/document-templates', {
-        params: { type: typeFilter, search },
+        params: { type: typeFilter, search: debouncedSearch },
       });
       if (res.success) {
         setTemplates(res.data);
@@ -72,7 +74,7 @@ export function DocumentTemplatesPage() {
 
   useEffect(() => {
     fetchTemplates();
-  }, [typeFilter, search]);
+  }, [typeFilter, debouncedSearch]);
 
   const handleOpenCreate = () => {
     setActiveTemplate(null);

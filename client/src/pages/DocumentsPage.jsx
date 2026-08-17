@@ -15,12 +15,14 @@ import { GlassTable } from '../components/ui/GlassTable';
 import { GlassInput } from '../components/ui/GlassInput';
 import { GlassModal } from '../components/ui/GlassModal';
 import { useToast } from '../context/ToastContext';
+import { useDebounce } from '../hooks/useDebounce';
 
 export function DocumentsPage() {
   const { error } = useToast();
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
 
   // Preview Modal
   const [previewDoc, setPreviewDoc] = useState(null);
@@ -28,7 +30,7 @@ export function DocumentsPage() {
   const fetchDocuments = async () => {
     try {
       setLoading(true);
-      const res = await api.get('/documents', { params: { search } });
+      const res = await api.get('/documents', { params: { search: debouncedSearch } });
       if (res.success) {
         setDocuments(res.data);
       }
@@ -41,7 +43,7 @@ export function DocumentsPage() {
 
   useEffect(() => {
     fetchDocuments();
-  }, [search]);
+  }, [debouncedSearch]);
 
   const handleDownload = (doc) => {
     const downloadUrl = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/documents/${doc._id}/download`;

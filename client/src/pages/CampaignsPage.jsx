@@ -20,6 +20,7 @@ import { GlassButton } from '../components/ui/GlassButton';
 import { GlassBadge } from '../components/ui/GlassBadge';
 import { GlassInput, GlassSelect } from '../components/ui/GlassInput';
 import { useToast } from '../context/ToastContext';
+import { useDebounce } from '../hooks/useDebounce';
 
 const STATUS_FILTERS = [
   { value: 'all', label: 'All Statuses' },
@@ -39,13 +40,14 @@ export function CampaignsPage() {
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [statusFilter, setStatusFilter] = useState('all');
 
   const fetchCampaigns = async () => {
     try {
       setLoading(true);
       const res = await api.get('/campaigns', {
-        params: { search, status: statusFilter },
+        params: { search: debouncedSearch, status: statusFilter },
       });
       if (res.success) {
         setCampaigns(res.data);
@@ -59,7 +61,7 @@ export function CampaignsPage() {
 
   useEffect(() => {
     fetchCampaigns();
-  }, [search, statusFilter]);
+  }, [debouncedSearch, statusFilter]);
 
   const handleSend = async (id) => {
     try {
