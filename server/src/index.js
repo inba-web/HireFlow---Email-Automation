@@ -25,6 +25,7 @@ app.use(
 // 2. CORS configuration
 const allowedOrigins = [
   config.CLIENT_URL,
+  'https://thodar.vercel.app',
   'https://thodar-email-automation.vercel.app',
   'https://thodaremail-automation.vercel.app',
   'http://localhost:5173',
