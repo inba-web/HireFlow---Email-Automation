@@ -24,6 +24,32 @@ export async function parseAndImportCandidates(csvContent, createdBy = 'HR Team'
   const validCandidates = [];
   const seenEmailsInBatch = new Set();
 
+  // Extract all valid emails from the batch to run a single DB duplicate check query
+  const batchEmailsToQuery = [];
+  for (const row of rows) {
+    const email = (row.email || row.candidateemail || '').toLowerCase().trim();
+    if (email && EMAIL_REGEX.test(email)) {
+      batchEmailsToQuery.push(email);
+    }
+  }
+
+  const existingDbEmails = new Set();
+  if (isDBConnected() && batchEmailsToQuery.length > 0) {
+    try {
+      const existing = await Candidate.find(
+        { email: { $in: batchEmailsToQuery } },
+        { email: 1 }
+      ).lean();
+      existing.forEach((c) => {
+        if (c.email) {
+          existingDbEmails.add(c.email.toLowerCase().trim());
+        }
+      });
+    } catch (err) {
+      logger.error(`Failed to pre-fetch existing candidates for batch check: ${err.message}`);
+    }
+  }
+
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
     const rowNum = i + 2; // header is row 1
@@ -64,8 +90,7 @@ export async function parseAndImportCandidates(csvContent, createdBy = 'HR Team'
 
     // 4. DB duplicate check
     if (isDBConnected()) {
-      const existing = await Candidate.findOne({ email });
-      if (existing) {
+      if (existingDbEmails.has(email)) {
         duplicates++;
         skipped++;
         errors.push({ row: rowNum, error: `Candidate already exists in database: ${email}` });
