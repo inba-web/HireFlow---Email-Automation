@@ -45,21 +45,15 @@ export async function getDashboardAnalytics(req, res, next) {
     }
 
     const [
-      totalCandidates,
-      selectedCandidates,
       statusCounts,
       campaignStats,
       activeCampaigns,
       recentCampaigns,
-      emailLogsCount,
-      deliveredCount,
-      failedCount,
+      emailLogStatusCounts,
       scheduledCount,
       documentsCount,
       recentLogs,
     ] = await Promise.all([
-      Candidate.countDocuments(),
-      Candidate.countDocuments({ status: { $in: ['Selected', 'Offer Sent', 'Offer Accepted', 'Joined'] } }),
       Candidate.aggregate([
         { $group: { _id: '$status', count: { $sum: 1 } } }
       ]),
@@ -75,13 +69,36 @@ export async function getDashboardAnalytics(req, res, next) {
       ]),
       Campaign.countDocuments({ status: { $in: ['Queued', 'Processing', 'Scheduled'] } }),
       Campaign.find().sort({ createdAt: -1 }).limit(5).populate('emailTemplateId', 'name category'),
-      EmailLog.countDocuments(),
-      EmailLog.countDocuments({ status: { $in: ['Sent', 'Delivered'] } }),
-      EmailLog.countDocuments({ status: 'Failed' }),
+      EmailLog.aggregate([
+        { $group: { _id: '$status', count: { $sum: 1 } } }
+      ]),
       Campaign.countDocuments({ status: 'Scheduled' }),
       Document.countDocuments(),
       EmailLog.find().sort({ createdAt: -1 }).limit(6),
     ]);
+
+    // Compute Candidate metrics from statusCounts aggregation
+    let totalCandidates = 0;
+    let selectedCandidates = 0;
+    statusCounts.forEach(item => {
+      const count = item.count || 0;
+      totalCandidates += count;
+      if (['Selected', 'Offer Sent', 'Offer Accepted', 'Joined'].includes(item._id)) {
+        selectedCandidates += count;
+      }
+    });
+
+    // Compute EmailLog metrics from emailLogStatusCounts aggregation
+    let deliveredCount = 0;
+    let failedCount = 0;
+    emailLogStatusCounts.forEach(item => {
+      const count = item.count || 0;
+      if (['Sent', 'Delivered'].includes(item._id)) {
+        deliveredCount += count;
+      } else if (item._id === 'Failed') {
+        failedCount += count;
+      }
+    });
 
     const sent = deliveredCount + failedCount;
     const deliveryRate = sent > 0 ? Math.round((deliveredCount / sent) * 100) : 100;
